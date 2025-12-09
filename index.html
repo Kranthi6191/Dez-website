@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gen 1 Pokémon Encyclopedia</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Gen 1 Pokédex</h1>
+    </header>
+
+    <main id="pokemon-grid">
+        </main>
+
+    <div id="detail-modal" class="modal">
+        <div id="detail-content" class="modal-content">
+            <button id="close-modal" aria-label="Close Details">&times;</button>
+            
+            <div id="pokemon-detail">
+                <h2 id="detail-name"></h2>
+                <img id="detail-image" src="" alt="">
+                <div id="detail-info">
+                    <p><strong>Pokedex ID:</strong> <span id="detail-id"></span></p>
+                    <p><strong>Type:</strong> <span id="detail-type"></span></p>
+                    <p id="detail-description"></p>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

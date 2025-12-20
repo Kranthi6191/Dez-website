@@ -3,26 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gen 1 Pokémon Encyclopedia</title>
+    <title>Dez's Portfolio & Pokedex</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <header>
-        <h1>Dez's Pokedex</h1>
-        <h2><b>Izzy is gooder than everyone.</b></h2>
-        <h2>Simeon chill</h2>
-        <h3>Wes is Awesome!!</h3>
-        <h3>Ezra is cute!!</h3> 
+        <div class="logo">Dez's Hub</div>
+        <nav>
+            <ul>
+                <li><a href="#" class="nav-link active" data-target="home">Home</a></li>
+                <li><a href="#" class="nav-link" data-target="about">About Me</a></li>
+                <li><a href="#" class="nav-link" data-target="pokedex">My Pokedex</a></li>
+            </ul>
+        </nav>
     </header>
 
-    <main id="pokemon-grid">
-        </main>
+    <section id="home" class="page-section active">
+        <div class="hero">
+            <h1>Welcome to Dez's World</h1>
+            <p>Explore the Gen 1 Encyclopedia and more.</p>
+            <button onclick="document.querySelector('[data-target=\'pokedex\']').click()">Go to Pokedex</button>
+        </div>
+    </section>
+
+    <section id="about" class="page-section">
+        <div class="content-container">
+            <h1>About Me & Friends</h1>
+            <div class="card">
+                <h2>The Crew</h2>
+                <ul class="friend-list">
+                    <li><strong>Izzy:</strong> Is gooder than everyone.</li>
+                    <li><strong>Simeon:</strong> Chill.</li>
+                    <li><strong>Wes:</strong> Is Awesome!!</li>
+                    <li><strong>Ezra:</strong> Is cute!!</li> 
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="pokedex" class="page-section">
+        <div class="gen-header">
+            <h1>Generation 1</h1>
+            <p>Kanto Region Encyclopedia</p>
+        </div>
+        
+        <main id="pokemon-grid">
+            </main>
+    </section>
 
     <div id="detail-modal" class="modal">
         <div id="detail-content" class="modal-content">
             <button id="close-modal" aria-label="Close Details">&times;</button>
-            
             <div id="pokemon-detail">
                 <h2 id="detail-name"></h2>
                 <img id="detail-image" src="" alt="">
@@ -30,7 +62,7 @@
                     <p><strong>Pokedex ID:</strong> <span id="detail-id"></span></p>
                     <p><strong>Type:</strong> <span id="detail-type"></span></p>
                     <p id="detail-description"></p>
-                    </div>
+                </div>
             </div>
         </div>
     </div>

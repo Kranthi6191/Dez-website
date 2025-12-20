@@ -1,5 +1,6 @@
+// --- DATA (Paste your full list of 90 pokemon here) ---
 const pokemonData = [
-    {
+ {
         id: 1,
         name: "Bulbasaur",
         type: "Grass/Poison",
@@ -1057,90 +1058,83 @@ const pokemonData = [
         imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/151.png"
     }
 ];
+// --- POKEDEX RENDER LOGIC ---
 
-// ... rest of your script.js code (from the previous answer)
 const grid = document.getElementById('pokemon-grid');
 const modal = document.getElementById('detail-modal');
-const closeModalBtn = document.getElementById('close-modal');
+const closeModal = document.getElementById('close-modal');
 
-// Function to generate the HTML for a single Pokémon card
-function createPokemonCard(pokemon) {
-    const card = document.createElement('div');
-    card.classList.add('pokemon-card');
-    card.setAttribute('data-id', pokemon.id);
+// Modal Elements
+const detailName = document.getElementById('detail-name');
+const detailImg = document.getElementById('detail-image');
+const detailId = document.getElementById('detail-id');
+const detailType = document.getElementById('detail-type');
+const detailDesc = document.getElementById('detail-description');
 
-    // Creative Color for the card based on the type (simple example)
-    // You could expand this for more types!
-    let typeColor = '#aaaaaa'; // Default color
-    if (pokemon.type.includes('Grass')) typeColor = '#7AC74C';
-    else if (pokemon.type.includes('Fire')) typeColor = '#EE8130';
-    else if (pokemon.type.includes('Water')) typeColor = '#6390F0';
-    else if (pokemon.type.includes('Electric')) typeColor = '#F7D02C';
-    else if (pokemon.type.includes('Psychic')) typeColor = '#F95587';
-    else if (pokemon.type.includes('Normal')) typeColor = '#A8A77A';
-    else if (pokemon.type.includes('Fighting')) typeColor = '#C22E28';
-    
-    card.style.border = `4px solid ${typeColor}`;
-
-    card.innerHTML = `
-        <img src="${pokemon.imageUrl}" alt="${pokemon.name}">
-        <p>#${String(pokemon.id).padStart(3, '0')}</p>
-        <h2>${pokemon.name}</h2>
-    `;
-
-    card.addEventListener('click', () => showPokemonDetails(pokemon));
-
-    return card;
-}
-
-// Function to populate the detail modal and show it (the "zoom-in")
-function showPokemonDetails(pokemon) {
-    document.getElementById('detail-name').textContent = pokemon.name;
-    document.getElementById('detail-image').src = pokemon.imageUrl;
-    document.getElementById('detail-image').alt = pokemon.name;
-    document.getElementById('detail-id').textContent = String(pokemon.id).padStart(3, '0');
-    document.getElementById('detail-type').textContent = pokemon.type;
-    document.getElementById('detail-description').textContent = pokemon.description;
-    
-    // Add the 'active' class to trigger the CSS fade and scale transition
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden'; // Prevent scrolling the background
-}
-
-// Function to close the detail modal
-function closePokemonDetails() {
-    // Remove the 'active' class to trigger the CSS reverse fade and scale transition
-    modal.classList.remove('active');
-
-    // Wait for the transition to complete before allowing background scroll again
-    setTimeout(() => {
-        document.body.style.overflow = '';
-    }, 400); // Must match the longest transition time in CSS (.modal-content transition)
-}
-
-// Event Listeners for the modal
-closeModalBtn.addEventListener('click', closePokemonDetails);
-
-// Close modal when clicking outside the content
-modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
-        closePokemonDetails();
-    }
-});
-
-// Close modal with the ESC key
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modal.classList.contains('active')) {
-        closePokemonDetails();
-    }
-});
-
-// Initial function call to render all cards
-function renderPokemonGrid() {
-    pokemonData.forEach(pokemon => {
-        grid.appendChild(createPokemonCard(pokemon));
+// 1. Render Cards
+function renderPokemon() {
+    grid.innerHTML = '';
+    pokemonData.forEach(poke => {
+        const card = document.createElement('div');
+        card.classList.add('pokemon-card');
+        card.innerHTML = `
+            <img src="${poke.imageUrl}" alt="${poke.name}">
+            <h2>${poke.name}</h2>
+            <p>ID: #${poke.id}</p>
+        `;
+        
+        // Add click event to open modal
+        card.addEventListener('click', () => openModal(poke));
+        
+        grid.appendChild(card);
     });
 }
 
-// Run the render function when the script loads
-renderPokemonGrid();
+// 2. Modal Functions
+function openModal(pokemon) {
+    detailName.textContent = pokemon.name;
+    detailImg.src = pokemon.imageUrl;
+    detailImg.alt = pokemon.name;
+    detailId.textContent = `#${pokemon.id}`;
+    detailType.textContent = pokemon.type;
+    detailDesc.textContent = pokemon.description;
+    
+    modal.classList.add('active');
+}
+
+closeModal.addEventListener('click', () => {
+    modal.classList.remove('active');
+});
+
+// Close modal if clicking outside content
+window.addEventListener('click', (e) => {
+    if (e.target === modal) {
+        modal.classList.remove('active');
+    }
+});
+
+// --- NAVIGATION LOGIC (New) ---
+
+const navLinks = document.querySelectorAll('.nav-link');
+const pages = document.querySelectorAll('.page-section');
+
+navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        // 1. Remove active class from all links
+        navLinks.forEach(nav => nav.classList.remove('active'));
+        // 2. Add active class to clicked link
+        link.classList.add('active');
+
+        // 3. Hide all pages
+        pages.forEach(page => page.classList.remove('active'));
+
+        // 4. Show target page
+        const targetId = link.getAttribute('data-target');
+        document.getElementById(targetId).classList.add('active');
+    });
+});
+
+// Initial Render
+renderPokemon();

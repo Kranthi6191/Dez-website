@@ -1,169 +1,136 @@
-/* --- Global Styles --- */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f0f2f5; /* Light grey background to make cards pop */
-    color: #333;
-    margin: 0;
-    padding: 0;
-    line-height: 1.6;
+:root {
+    --primary: #2c3e50;
+    --secondary: #3498db;
+    --accent: #e74c3c;
+    --bg: #f4f7f6;
+    --white: #ffffff;
 }
 
-/* --- Professional Header --- */
+body {
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--bg);
+    margin: 0;
+    color: #333;
+}
+
+/* --- Navigation --- */
 header {
-    background-color: #2c3e50;
-    color: white;
-    padding: 0 40px;
-    height: 70px;
+    background: var(--primary);
+    padding: 1rem 5%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 1000;
 }
 
-.logo { font-size: 1.5rem; font-weight: bold; }
+.logo { color: white; font-weight: bold; font-size: 1.4rem; }
 
-nav ul { list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; }
+nav ul { list-style: none; display: flex; gap: 2rem; margin: 0; }
 
 nav a {
-    color: #bdc3c7;
     text-decoration: none;
+    color: #bdc3c7;
     font-weight: 500;
     transition: 0.3s;
 }
 
-nav a:hover, nav a.active {
-    color: #ffffff;
-    border-bottom: 2px solid #3498db;
-}
+nav a.active, nav a:hover { color: var(--white); }
 
-/* --- Page Management --- */
-.page-section {
-    display: none;
-    padding: 40px 20px;
-    min-height: 80vh;
-}
-
-.page-section.active {
-    display: block;
-    animation: fadeIn 0.5s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* --- Who's That Pokemon Game (Home Page) --- */
+/* --- Game Container (Centered & Fixed) --- */
 #game-container {
-    max-width: 450px;
-    margin: 40px auto; /* Centers the game horizontally */
-    background: white;
-    padding: 30px;
+    max-width: 500px;
+    margin: 2rem auto;
+    background: var(--white);
+    padding: 2rem;
     border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     text-align: center;
 }
 
-#game-image {
-    height: 200px;
+.game-box img {
+    height: 180px;
     filter: brightness(0); /* The Silhouette */
     transition: filter 0.5s ease;
-    margin-bottom: 20px;
+    margin: 1rem 0;
 }
 
-#game-image.revealed { filter: brightness(1); }
+.game-box img.revealed { filter: brightness(1); }
 
 #game-options {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    gap: 15px;
+    margin-top: 1.5rem;
 }
 
 #game-options button {
     padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background: white;
+    border: 2px solid #eee;
+    background: var(--white);
+    border-radius: 10px;
     cursor: pointer;
     font-weight: bold;
-    transition: background 0.2s;
+    transition: 0.2s;
 }
 
-#game-options button:hover { background: #f8f9fa; border-color: #3498db; }
+#game-options button:hover {
+    border-color: var(--secondary);
+    background: #f0f9ff;
+}
 
 /* --- Pokedex Grid --- */
+.page-section { display: none; padding: 2rem 5%; }
+.page-section.active { display: block; animation: fadeIn 0.4s; }
+
 #pokemon-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 25px;
-    max-width: 1200px;
-    margin: 0 auto;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 2rem;
 }
 
 .pokemon-card {
-    background: white;
+    background: var(--white);
+    padding: 1.5rem;
     border-radius: 15px;
-    padding: 20px;
     text-align: center;
-    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     cursor: pointer;
-    border: 1px solid #eee;
+    transition: transform 0.2s;
 }
 
-.pokemon-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-}
+.pokemon-card:hover { transform: translateY(-5px); }
 
-/* --- Modal Styling --- */
+/* --- Modal fix for "Vertical Strip" --- */
 .modal {
     display: none;
     position: fixed;
-    z-index: 2000;
-    left: 0; top: 0; width: 100%; height: 100%;
+    inset: 0;
     background: rgba(0,0,0,0.7);
-    backdrop-filter: blur(5px); /* Blurs the background */
+    backdrop-filter: blur(8px);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
 }
 
-.modal.active { display: flex; justify-content: center; align-items: center; }
+.modal.active { display: flex; }
 
 .modal-content {
-    background: white;
-    padding: 30px;
-    border-radius: 20px;
-    width: 95%;
-    max-width: 500px; /* Prevents vertical strip look */
+    background: var(--white);
+    width: 90%;
+    max-width: 450px; /* Forces a nice card shape */
+    padding: 2rem;
+    border-radius: 25px;
     position: relative;
     text-align: center;
 }
 
-#detail-info {
-    text-align: left;
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 15px;
-    margin-top: 20px;
+#close-modal {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    font-size: 2rem; border: none; background: none; cursor: pointer;
 }
 
-/* --- Base Stats Styling --- */
-.stat-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 10px 0;
-    padding-bottom: 5px;
-    border-bottom: 1px solid #eee;
-}
-
-.stat-label { font-weight: bold; color: #7f8c8d; }
-
-.stat-value {
-    background: #3498db;
-    color: white;
-    padding: 2px 12px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }

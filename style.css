@@ -15,14 +15,35 @@ nav a.active { color: white; border-bottom: 3px solid var(--secondary); }
 .page-section { display: none; padding: 60px 5%; text-align: center; }
 .page-section.active { display: block; animation: fadeIn 0.5s; }
 
-/* --- About Page: Trainer Gallery --- */
+/* --- About Page: Kid Animations --- */
 .character-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; }
-.char-card { background: white; width: 260px; padding: 25px; border-radius: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-bottom: 8px solid #ddd; }
+.char-card { background: white; width: 260px; padding: 25px; border-radius: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-bottom: 8px solid #ddd; position: relative; overflow: hidden; }
 .dez { border-color: #f1c40f; } .izzy { border-color: #9b59b6; } .wes { border-color: #e67e22; } .simeon { border-color: #2ecc71; } .ezra { border-color: #3498db; }
 
-.avatar-box { height: 130px; position: relative; display: flex; align-items: flex-end; justify-content: center; }
-.trainer-anim { height: 100px; z-index: 1; }
-.pkmn-buddy { height: 60px; position: absolute; bottom: 0; right: 10%; z-index: 2; }
+.avatar-box { height: 150px; position: relative; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 15px; }
+.kid-pic { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid #eee; z-index: 1; background: #eee; }
+.pkmn-buddy { height: 60px; position: absolute; bottom: 0; right: 5%; z-index: 2; }
+
+/* ANIMATIONS */
+/* Dez: Smart/Logic (Pulsing Brain Power) */
+.anim-smart .kid-pic { animation: brainPulse 2s infinite ease-in-out; }
+@keyframes brainPulse { 0% { box-shadow: 0 0 0 0 rgba(241, 196, 15, 0.4); } 70% { box-shadow: 0 0 0 20px rgba(241, 196, 15, 0); } 100% { box-shadow: 0 0 0 0 rgba(241, 196, 15, 0); } }
+
+/* Izzy: Beautiful (Rotate/Sparkle) */
+.anim-beauty .kid-pic { animation: sparkleTwist 5s infinite linear; }
+@keyframes sparkleTwist { 0%, 100% { transform: rotate(-5deg); border-color: #9b59b6; } 50% { transform: rotate(5deg); border-color: #ffb7b2; } }
+
+/* Wes: Energy (Shake/Vibrate) */
+.anim-energy .kid-pic { animation: energyShake 0.5s infinite; }
+@keyframes energyShake { 0% { transform: translate(1px, 1px) rotate(0deg); } 25% { transform: translate(-1px, -2px) rotate(-1deg); } 50% { transform: translate(-3px, 0px) rotate(1deg); } 75% { transform: translate(3px, 2px) rotate(0deg); } 100% { transform: translate(1px, -1px) rotate(0deg); } }
+
+/* Simeon: Chill (Float) */
+.anim-chill .kid-pic { animation: chillFloat 3s infinite ease-in-out; }
+@keyframes chillFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+/* Ezra: Cute (Bounce) */
+.anim-cute .kid-pic { animation: babyBounce 1s infinite alternate; }
+@keyframes babyBounce { from { transform: scale(1); } to { transform: scale(1.1); } }
 
 /* --- Game & Pokedex --- */
 #game-container { max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
@@ -31,19 +52,58 @@ nav a.active { color: white; border-bottom: 3px solid var(--secondary); }
 #game-options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
 #game-options button { padding: 12px; border: 2px solid #eee; border-radius: 12px; background: white; font-weight: bold; cursor: pointer; }
 
-#pokemon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; margin-top: 30px; }
-.pokemon-card { background: white; padding: 20px; border-radius: 20px; cursor: pointer; transition: 0.3s; }
-.pokemon-card:hover { transform: translateY(-5px); }
+#pokemon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; margin-top: 30px; padding-bottom: 50px;}
+.pokemon-card { background: white; padding: 20px; border-radius: 20px; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.05); text-align: center; }
+.pokemon-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
 
-/* --- Catch Animation --- */
-#flying-pokeball {
-    position: fixed; width: 50px; z-index: 3000;
-    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
-}
-.hidden { display: none; opacity: 0; }
+/* --- SUMMON ANIMATION (The Ball opening) --- */
+#summon-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 5000; display: flex; justify-content: center; align-items: center; }
+#summon-overlay.hidden { display: none; }
 
-.catch-btn { 
-    background: #e74c3c; color: white; border: none; padding: 10px 20px; 
-    border-radius: 50px; cursor: pointer; font-weight: bold; margin-bottom: 20px;
+.summon-ball {
+    width: 100px; height: 100px;
+    background: radial-gradient(circle at 35% 35%, #fff 5%, #ff5252 20%, #b30000 80%);
+    border-radius: 50%;
+    border: 5px solid #000;
+    position: relative;
+    box-shadow: 0 0 50px rgba(255,255,255,0.2);
 }
+.summon-ball::after {
+    content: ''; position: absolute; top: 45%; left: 0; width: 100%; height: 10%; background: #000;
+}
+.summon-ball::before {
+    content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 30px; height: 30px; background: white; border: 5px solid #000; border-radius: 50%; z-index: 2;
+}
+
+/* Animation Classes */
+.animate-summon .summon-ball { animation: shakeBall 0.8s ease-in-out forwards; }
+.animate-summon .summon-flash { 
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+    background: white; opacity: 0; pointer-events: none;
+    animation: flashScreen 0.3s 0.8s forwards; /* Runs after shake */
+}
+
+@keyframes shakeBall {
+    0%, 100% { transform: rotate(0) scale(0); }
+    10% { transform: rotate(0) scale(1); }
+    20% { transform: rotate(-20deg) scale(1.1); }
+    40% { transform: rotate(20deg) scale(1.1); }
+    60% { transform: rotate(-20deg) scale(1.1); }
+    80% { transform: rotate(20deg) scale(1.1); }
+}
+
+@keyframes flashScreen {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Modal Styling */
+.modal { display: none; position: fixed; z-index: 6000; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
+.modal.active { display: flex; animation: fadeIn 0.3s; }
+.modal-content { background: white; padding: 40px; border-radius: 30px; text-align: center; width: 90%; max-width: 400px; position: relative; }
+.modal-content img { height: 200px; margin: 20px 0; }
+#close-modal { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 30px; cursor: pointer; }
+.cta-btn { background: #e74c3c; color: white; border: none; padding: 10px 20px; border-radius: 50px; cursor: pointer; font-weight: bold; margin-top: 20px; }
+
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }

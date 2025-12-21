@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dez's Portfolio & Pokedex</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -22,11 +23,8 @@
     <section id="home" class="page-section active">
         <div class="hero">
             <h1>Welcome to Our Poke World</h1>
-            
             <div id="game-container">
-                <div class="score-board">
-                    Streak: <span id="current-score">0</span> | Best: <span id="high-score">0</span>
-                </div>
+                <div class="score-board">Streak: <span id="current-score">0</span> | Best: <span id="high-score">0</span></div>
                 <h2>Who's That Pokémon?</h2>
                 <div class="game-box">
                     <img id="game-image" src="" alt="Mystery Pokemon">
@@ -34,23 +32,52 @@
                     <p id="game-feedback"></p>
                 </div>
             </div>
-
-            <button class="cta-btn" onclick="document.querySelector('[data-target=\'pokedex\']').click()">Browse the Pokedex</button>
+            <button class="cta-btn" onclick="document.querySelector('[data-target=\'pokedex\']').click()">Open Pokedex</button>
         </div>
     </section>
 
     <section id="about" class="page-section">
-        <div class="content-container">
-            <h1>About Us</h1>
-            <div class="info-card">
-                <h2>The Crew</h2>
-                <ul class="friend-list">
-                    <li><strong>Dez:</strong> The Smartest of all the People of the earth.</li>
-                    <li><strong>Izzy:</strong> Is gooder than everyone.</li>
-                    <li><strong>Simeon:</strong> Chill.</li>
-                    <li><strong>Wes:</strong> Is Awesome!!</li>
-                    <li><strong>Ezra:</strong> Is cute!!</li> 
-                </ul>
+        <h1 class="section-title">Meet the Trainers</h1>
+        <div class="character-grid">
+            <div class="char-card">
+                <div class="avatar-box">
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif" class="pkmn-buddy">
+                    <div class="trainer-icon boy-blonde-curly"></div>
+                </div>
+                <h3>Dez (13)</h3>
+                <p>The smartest person on Earth. Curly blonde hair and big brain energy.</p>
+            </div>
+            <div class="char-card">
+                <div class="avatar-box">
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/133.gif" class="pkmn-buddy">
+                    <div class="trainer-icon girl-blonde-black"></div>
+                </div>
+                <h3>Izzy (10)</h3>
+                <p>Better than everyone else! Stunning blonde and black hair.</p>
+            </div>
+            <div class="char-card">
+                <div class="avatar-box">
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/4.gif" class="pkmn-buddy">
+                    <div class="trainer-icon boy-blonde-straight"></div>
+                </div>
+                <h3>Wes (6)</h3>
+                <p>Absolutely awesome with perfect straight blonde hair.</p>
+            </div>
+            <div class="char-card">
+                <div class="avatar-box">
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/1.gif" class="pkmn-buddy">
+                    <div class="trainer-icon boy-toddler"></div>
+                </div>
+                <h3>Simeon (3)</h3>
+                <p>Total chill vibes. Beautiful blonde hair and a big heart.</p>
+            </div>
+            <div class="char-card">
+                <div class="avatar-box">
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/7.gif" class="pkmn-buddy">
+                    <div class="trainer-icon baby"></div>
+                </div>
+                <h3>Ezra</h3>
+                <p>Just a few months old and already the cutest trainer ever!</p>
             </div>
         </div>
     </section>
@@ -58,7 +85,6 @@
     <section id="pokedex" class="page-section">
         <div class="gen-header">
             <h1 id="pokedex-title">Generation 1</h1>
-            <p id="pokedex-subtitle">Kanto Region Encyclopedia</p>
             <div class="gen-nav">
                 <button class="gen-btn active" onclick="changeGen(1, 151, 'Generation 1', 'Kanto', this)">Gen 1</button>
                 <button class="gen-btn" onclick="changeGen(152, 251, 'Generation 2', 'Johto', this)">Gen 2</button>
@@ -75,13 +101,12 @@
             <h2 id="detail-name"></h2>
             <img id="detail-image" src="" alt="">
             <div id="detail-info">
-                <p><strong>ID:</strong> #<span id="detail-id"></span> | <strong>Type:</strong> <span id="detail-type"></span></p>
-                <hr>
-                <h3>Base Stats</h3>
-                <div id="stats-box">
-                    <div class="stat-row"><span>HP</span> <span id="stat-hp" class="stat-value"></span></div>
-                    <div class="stat-row"><span>Attack</span> <span id="stat-attack" class="stat-value"></span></div>
-                    <div class="stat-row"><span>Defense</span> <span id="stat-defense" class="stat-value"></span></div>
+                <div class="info-tag">#<span id="detail-id"></span></div>
+                <div class="info-tag"><span id="detail-type"></span></div>
+                <div class="stats-box">
+                    <div class="stat-row">HP <b id="stat-hp"></b></div>
+                    <div class="stat-row">ATK <b id="stat-attack"></b></div>
+                    <div class="stat-row">DEF <b id="stat-defense"></b></div>
                 </div>
             </div>
         </div>

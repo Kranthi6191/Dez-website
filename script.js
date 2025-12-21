@@ -1,126 +1,94 @@
-// Global Selectors
 const grid = document.getElementById('pokemon-grid');
 const modal = document.getElementById('detail-modal');
 const closeModal = document.getElementById('close-modal');
 
-// Game Tracking
-let streak = 0;
+let score = 0;
 let best = 0;
 
-// --- POKEDEX FUNCTIONALITY ---
+// --- POKEDEX LOGIC ---
 async function changeGen(start, end, title, region, btn) {
     document.getElementById('pokedex-title').textContent = title;
-    document.getElementById('pokedex-subtitle').textContent = `${region} Region Encyclopedia`;
-    
     document.querySelectorAll('.gen-btn').forEach(b => b.classList.remove('active'));
     if(btn) btn.classList.add('active');
 
-    grid.innerHTML = '<p>Loading Pokedex...</p>';
-
-    try {
-        const promises = [];
-        for (let i = start; i <= end; i++) {
-            promises.push(fetch(`https://pokeapi.co/api/v2/pokemon/${i}`).then(res => res.json()));
-        }
-        const pokemonList = await Promise.all(promises);
-        grid.innerHTML = '';
-        
-        pokemonList.forEach(pokemon => {
-            const card = document.createElement('div');
-            card.className = 'pokemon-card';
-            card.innerHTML = `
-                <img src="${pokemon.sprites.front_default}" alt="${pokemon.name}">
-                <h3>${pokemon.name.toUpperCase()}</h3>
-                <p>#${pokemon.id}</p>
-            `;
-            card.onclick = () => openModal(pokemon);
-            grid.appendChild(card);
-        });
-    } catch (err) {
-        grid.innerHTML = '<p>Oops! Failed to load data.</p>';
+    grid.innerHTML = '<p>Loading...</p>';
+    const promises = [];
+    for (let i = start; i <= end; i++) {
+        promises.push(fetch(`https://pokeapi.co/api/v2/pokemon/${i}`).then(res => res.json()));
     }
+    const list = await Promise.all(promises);
+    grid.innerHTML = '';
+    list.forEach(pkmn => {
+        const card = document.createElement('div');
+        card.className = 'pokemon-card';
+        card.innerHTML = `<img src="${pkmn.sprites.front_default}"><h3>${pkmn.name.toUpperCase()}</h3>`;
+        card.onclick = () => openModal(pkmn);
+        grid.appendChild(card);
+    });
 }
 
-function openModal(pokemon) {
-    document.getElementById('detail-name').textContent = pokemon.name.toUpperCase();
-    document.getElementById('detail-image').src = pokemon.sprites.other['official-artwork'].front_default;
-    document.getElementById('detail-id').textContent = pokemon.id;
-    document.getElementById('detail-type').textContent = pokemon.types.map(t => t.type.name.toUpperCase()).join(' / ');
-    
-    document.getElementById('stat-hp').textContent = pokemon.stats[0].base_stat;
-    document.getElementById('stat-attack').textContent = pokemon.stats[1].base_stat;
-    document.getElementById('stat-defense').textContent = pokemon.stats[2].base_stat;
-    
+function openModal(pkmn) {
+    document.getElementById('detail-name').textContent = pkmn.name.toUpperCase();
+    document.getElementById('detail-image').src = pkmn.sprites.other['official-artwork'].front_default;
+    document.getElementById('detail-id').textContent = pkmn.id;
+    document.getElementById('detail-type').textContent = pkmn.types.map(t => t.type.name).join(' / ').toUpperCase();
+    document.getElementById('stat-hp').textContent = pkmn.stats[0].base_stat;
+    document.getElementById('stat-attack').textContent = pkmn.stats[1].base_stat;
+    document.getElementById('stat-defense').textContent = pkmn.stats[2].base_stat;
     modal.classList.add('active');
 }
 
-// --- MINI GAME FUNCTIONALITY ---
+// --- MINI GAME (REAL NAMES) ---
 async function initGame() {
+    const options = document.getElementById('game-options');
+    const img = document.getElementById('game-image');
     const feedback = document.getElementById('game-feedback');
-    const optionsContainer = document.getElementById('game-options');
-    const gameImg = document.getElementById('game-image');
     
-    optionsContainer.innerHTML = '<span>Scanning tall grass...</span>';
-    gameImg.classList.remove('revealed');
+    options.innerHTML = '<span>Loading...</span>';
+    img.classList.remove('revealed');
     feedback.textContent = "";
 
-    // Pick random Pokemon from all generations (up to 898)
-    const randomId = Math.floor(Math.random() * 898) + 1;
-    const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${randomId}`);
-    const pokemon = await res.json();
-    const correctName = pokemon.name.toUpperCase();
+    const randomId = Math.floor(Math.random() * 493) + 1; // Pulls from first 4 Gens
+    const pkmn = await fetch(`https://pokeapi.co/api/v2/pokemon/${randomId}`).then(r => r.json());
+    const correctName = pkmn.name.toUpperCase();
 
-    gameImg.src = pokemon.sprites.other['official-artwork'].front_default;
-    optionsContainer.innerHTML = '';
+    img.src = pkmn.sprites.other['official-artwork'].front_default;
+    options.innerHTML = '';
 
-    // Fetch 3 other real names for options
+    // Get 3 random names for fake choices
     let choices = [correctName];
     while(choices.length < 4) {
-        const dummyId = Math.floor(Math.random() * 898) + 1;
-        if(dummyId !== randomId) {
-            const dummyRes = await fetch(`https://pokeapi.co/api/v2/pokemon/${dummyId}`);
-            const dummyPkmn = await dummyRes.json();
-            const dummyName = dummyPkmn.name.toUpperCase();
-            if(!choices.includes(dummyName)) choices.push(dummyName);
-        }
+        let randId = Math.floor(Math.random() * 493) + 1;
+        let dummy = await fetch(`https://pokeapi.co/api/v2/pokemon/${randId}`).then(r => r.json());
+        let dummyName = dummy.name.toUpperCase();
+        if(!choices.includes(dummyName)) choices.push(dummyName);
     }
 
-    // Shuffle and Create Buttons
     choices.sort(() => Math.random() - 0.5).forEach(choice => {
         const btn = document.createElement('button');
         btn.textContent = choice;
         btn.onclick = () => {
-            gameImg.classList.add('revealed');
-            // Disable buttons after choice
-            document.querySelectorAll('#game-options button').forEach(b => b.disabled = true);
-            
+            img.classList.add('revealed');
             if(choice === correctName) {
-                streak++;
-                feedback.textContent = `Correct! It's ${correctName}!`;
-                feedback.style.color = "var(--success)";
-                if(streak > best) best = streak;
+                score++;
+                feedback.textContent = "CORRECT!";
+                feedback.style.color = "green";
+                if(score > best) best = score;
             } else {
-                streak = 0;
-                feedback.textContent = `Incorrect! It was ${correctName}.`;
-                feedback.style.color = "var(--accent)";
+                score = 0;
+                feedback.textContent = `NOPE! IT WAS ${correctName}`;
+                feedback.style.color = "red";
             }
-            
-            updateScoreUI();
-            setTimeout(initGame, 2500); // Start next round
+            document.getElementById('current-score').textContent = score;
+            document.getElementById('high-score').textContent = best;
+            setTimeout(initGame, 2000);
         };
-        optionsContainer.appendChild(btn);
+        options.appendChild(btn);
     });
 }
 
-function updateScoreUI() {
-    document.getElementById('current-score').textContent = streak;
-    document.getElementById('high-score').textContent = best;
-}
-
-// --- GLOBAL NAVIGATION & EVENT LISTENERS ---
+// --- NAV & CLOSE ---
 closeModal.onclick = () => modal.classList.remove('active');
-window.onclick = (e) => { if(e.target === modal) modal.classList.remove('active'); };
-
 document.querySelectorAll('.nav-link').forEach(link => {
     link.onclick = (e) => {
         e.preventDefault();
@@ -130,6 +98,5 @@ document.querySelectorAll('.nav-link').forEach(link => {
     };
 });
 
-// Start the Pokedex on Gen 1 and start the Game
 changeGen(1, 151, 'Generation 1', 'Kanto');
 initGame();

@@ -2,16 +2,15 @@ const grid = document.getElementById('pokemon-grid');
 const modal = document.getElementById('detail-modal');
 const closeModal = document.getElementById('close-modal');
 
-let score = 0;
-let best = 0;
+let score = 0; let best = 0;
 
-// --- POKEDEX LOGIC ---
+// --- POKEDEX ---
 async function changeGen(start, end, title, region, btn) {
     document.getElementById('pokedex-title').textContent = title;
     document.querySelectorAll('.gen-btn').forEach(b => b.classList.remove('active'));
     if(btn) btn.classList.add('active');
 
-    grid.innerHTML = '<p>Loading...</p>';
+    grid.innerHTML = '<p>Searching tall grass...</p>';
     const promises = [];
     for (let i = start; i <= end; i++) {
         promises.push(fetch(`https://pokeapi.co/api/v2/pokemon/${i}`).then(res => res.json()));
@@ -30,38 +29,53 @@ async function changeGen(start, end, title, region, btn) {
 function openModal(pkmn) {
     document.getElementById('detail-name').textContent = pkmn.name.toUpperCase();
     document.getElementById('detail-image').src = pkmn.sprites.other['official-artwork'].front_default;
-    document.getElementById('detail-id').textContent = pkmn.id;
-    document.getElementById('detail-type').textContent = pkmn.types.map(t => t.type.name).join(' / ').toUpperCase();
     document.getElementById('stat-hp').textContent = pkmn.stats[0].base_stat;
     document.getElementById('stat-attack').textContent = pkmn.stats[1].base_stat;
     document.getElementById('stat-defense').textContent = pkmn.stats[2].base_stat;
     modal.classList.add('active');
 }
 
-// --- MINI GAME (REAL NAMES) ---
+// --- CATCH ANIMATION ---
+function throwPokeball() {
+    const ball = document.getElementById('flying-pokeball');
+    ball.classList.remove('hidden');
+    ball.style.top = "90%";
+    ball.style.left = "50%";
+    ball.style.opacity = "1";
+
+    setTimeout(() => {
+        ball.style.transform = "translateY(-400px) rotate(720deg) scale(1.5)";
+    }, 50);
+
+    setTimeout(() => {
+        ball.style.opacity = "0";
+        setTimeout(() => {
+            ball.classList.add('hidden');
+            ball.style.transform = "none";
+            alert("Gotcha! Pokemon was caught!");
+            modal.classList.remove('active');
+        }, 300);
+    }, 800);
+}
+
+// --- GAME LOGIC ---
 async function initGame() {
     const options = document.getElementById('game-options');
     const img = document.getElementById('game-image');
     const feedback = document.getElementById('game-feedback');
-    
-    options.innerHTML = '<span>Loading...</span>';
-    img.classList.remove('revealed');
-    feedback.textContent = "";
+    img.classList.remove('revealed'); feedback.textContent = "";
 
-    const randomId = Math.floor(Math.random() * 493) + 1; // Pulls from first 4 Gens
+    const randomId = Math.floor(Math.random() * 493) + 1;
     const pkmn = await fetch(`https://pokeapi.co/api/v2/pokemon/${randomId}`).then(r => r.json());
     const correctName = pkmn.name.toUpperCase();
-
     img.src = pkmn.sprites.other['official-artwork'].front_default;
     options.innerHTML = '';
 
-    // Get 3 random names for fake choices
     let choices = [correctName];
     while(choices.length < 4) {
         let randId = Math.floor(Math.random() * 493) + 1;
         let dummy = await fetch(`https://pokeapi.co/api/v2/pokemon/${randId}`).then(r => r.json());
-        let dummyName = dummy.name.toUpperCase();
-        if(!choices.includes(dummyName)) choices.push(dummyName);
+        if(!choices.includes(dummy.name.toUpperCase())) choices.push(dummy.name.toUpperCase());
     }
 
     choices.sort(() => Math.random() - 0.5).forEach(choice => {
@@ -70,15 +84,9 @@ async function initGame() {
         btn.onclick = () => {
             img.classList.add('revealed');
             if(choice === correctName) {
-                score++;
-                feedback.textContent = "CORRECT!";
-                feedback.style.color = "green";
+                score++; feedback.textContent = "CORRECT!";
                 if(score > best) best = score;
-            } else {
-                score = 0;
-                feedback.textContent = `NOPE! IT WAS ${correctName}`;
-                feedback.style.color = "red";
-            }
+            } else { score = 0; feedback.textContent = "WRONG!"; }
             document.getElementById('current-score').textContent = score;
             document.getElementById('high-score').textContent = best;
             setTimeout(initGame, 2000);
@@ -87,7 +95,7 @@ async function initGame() {
     });
 }
 
-// --- NAV & CLOSE ---
+// Navigation
 closeModal.onclick = () => modal.classList.remove('active');
 document.querySelectorAll('.nav-link').forEach(link => {
     link.onclick = (e) => {

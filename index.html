@@ -23,31 +23,33 @@
         <div class="hero">
             <h1>Welcome to Our Poke World</h1>
             
-            <div id="game-container" class="card">
+            <div id="game-container">
+                <div class="score-board">
+                    Streak: <span id="current-score">0</span> | Best: <span id="high-score">0</span>
+                </div>
                 <h2>Who's That Pokémon?</h2>
                 <div class="game-box">
                     <img id="game-image" src="" alt="Mystery Pokemon">
                     <div id="game-options"></div>
                     <p id="game-feedback"></p>
-                    <button id="reset-game" style="display:none;">Play Again</button>
                 </div>
             </div>
 
-            <button class="cta-btn" onclick="document.querySelector('[data-target=\'pokedex\']').click()">Explore the Pokedex</button>
+            <button class="cta-btn" onclick="document.querySelector('[data-target=\'pokedex\']').click()">Browse the Pokedex</button>
         </div>
     </section>
 
     <section id="about" class="page-section">
         <div class="content-container">
             <h1>About Us</h1>
-            <div class="card">
+            <div class="info-card">
                 <h2>The Crew</h2>
                 <ul class="friend-list">
-                    <li><strong>Dez:</strong> The Smartest of all.</li>
-                    <li><strong>Izzy:</strong> Gooder than everyone.</li>
+                    <li><strong>Dez:</strong> The Smartest of all the People of the earth.</li>
+                    <li><strong>Izzy:</strong> Is gooder than everyone.</li>
                     <li><strong>Simeon:</strong> Chill.</li>
-                    <li><strong>Wes:</strong> Awesome!!</li>
-                    <li><strong>Ezra:</strong> Cute!!</li> 
+                    <li><strong>Wes:</strong> Is Awesome!!</li>
+                    <li><strong>Ezra:</strong> Is cute!!</li> 
                 </ul>
             </div>
         </div>
@@ -57,7 +59,6 @@
         <div class="gen-header">
             <h1 id="pokedex-title">Generation 1</h1>
             <p id="pokedex-subtitle">Kanto Region Encyclopedia</p>
-            
             <div class="gen-nav">
                 <button class="gen-btn active" onclick="changeGen(1, 151, 'Generation 1', 'Kanto', this)">Gen 1</button>
                 <button class="gen-btn" onclick="changeGen(152, 251, 'Generation 2', 'Johto', this)">Gen 2</button>
@@ -75,11 +76,12 @@
             <img id="detail-image" src="" alt="">
             <div id="detail-info">
                 <p><strong>ID:</strong> #<span id="detail-id"></span> | <strong>Type:</strong> <span id="detail-type"></span></p>
-                <div class="stats-container">
-                    <h3>Base Stats</h3>
-                    <div class="stat-row"><span class="stat-label">HP</span> <span id="stat-hp" class="stat-value"></span></div>
-                    <div class="stat-row"><span class="stat-label">ATK</span> <span id="stat-attack" class="stat-value"></span></div>
-                    <div class="stat-row"><span class="stat-label">DEF</span> <span id="stat-defense" class="stat-value"></span></div>
+                <hr>
+                <h3>Base Stats</h3>
+                <div id="stats-box">
+                    <div class="stat-row"><span>HP</span> <span id="stat-hp" class="stat-value"></span></div>
+                    <div class="stat-row"><span>Attack</span> <span id="stat-attack" class="stat-value"></span></div>
+                    <div class="stat-row"><span>Defense</span> <span id="stat-defense" class="stat-value"></span></div>
                 </div>
             </div>
         </div>

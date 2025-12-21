@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dez's Portfolio & Pokedex</title>
+    <title>Wright's Pet Pokemons</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700&display=swap" rel="stylesheet">
 </head>
@@ -37,48 +37,54 @@
     </section>
 
     <section id="about" class="page-section">
-        <h1 class="section-title">Meet the Trainers</h1>
+        <h1 class="section-title">Meet the Wright Trainers</h1>
         <div class="character-grid">
-            <div class="char-card">
+            
+            <div class="char-card dez">
                 <div class="avatar-box">
-                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif" class="pkmn-buddy">
-                    <div class="trainer-icon boy-blonde-curly"></div>
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif" class="pkmn-buddy" alt="Pikachu">
+                    <div class="trainer-circle">👱‍♂️</div>
                 </div>
                 <h3>Dez (13)</h3>
-                <p>The smartest person on Earth. Curly blonde hair and big brain energy.</p>
+                <p>The smartest person on Earth! Known for his cool curly blonde hair and pro-trainer logic.</p>
             </div>
-            <div class="char-card">
+
+            <div class="char-card izzy">
                 <div class="avatar-box">
-                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/133.gif" class="pkmn-buddy">
-                    <div class="trainer-icon girl-blonde-black"></div>
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/133.gif" class="pkmn-buddy" alt="Eevee">
+                    <div class="trainer-circle">👱‍♀️</div>
                 </div>
                 <h3>Izzy (10)</h3>
-                <p>Better than everyone else! Stunning blonde and black hair.</p>
+                <p>Better than everyone else! She has beautiful blonde and black hair.</p>
             </div>
-            <div class="char-card">
+
+            <div class="char-card wes">
                 <div class="avatar-box">
-                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/4.gif" class="pkmn-buddy">
-                    <div class="trainer-icon boy-blonde-straight"></div>
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/4.gif" class="pkmn-buddy" alt="Charmander">
+                    <div class="trainer-circle">👦</div>
                 </div>
                 <h3>Wes (6)</h3>
-                <p>Absolutely awesome with perfect straight blonde hair.</p>
+                <p>Total Awesome energy! Has the most beautiful straight blonde hair.</p>
             </div>
-            <div class="char-card">
+
+            <div class="char-card simeon">
                 <div class="avatar-box">
-                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/1.gif" class="pkmn-buddy">
-                    <div class="trainer-icon boy-toddler"></div>
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/1.gif" class="pkmn-buddy" alt="Bulbasaur">
+                    <div class="trainer-circle">👶</div>
                 </div>
                 <h3>Simeon (3)</h3>
-                <p>Total chill vibes. Beautiful blonde hair and a big heart.</p>
+                <p>The definition of chill. Beautiful blonde hair and a very relaxed vibe.</p>
             </div>
-            <div class="char-card">
+
+            <div class="char-card ezra">
                 <div class="avatar-box">
-                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/7.gif" class="pkmn-buddy">
-                    <div class="trainer-icon baby"></div>
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/7.gif" class="pkmn-buddy" alt="Squirtle">
+                    <div class="trainer-circle">🍼</div>
                 </div>
                 <h3>Ezra</h3>
-                <p>Just a few months old and already the cutest trainer ever!</p>
+                <p>Just a few months old and already the cutest member of the squad!</p>
             </div>
+
         </div>
     </section>
 
@@ -101,12 +107,12 @@
             <h2 id="detail-name"></h2>
             <img id="detail-image" src="" alt="">
             <div id="detail-info">
-                <div class="info-tag">#<span id="detail-id"></span></div>
-                <div class="info-tag"><span id="detail-type"></span></div>
+                <div class="info-row"><b>ID:</b> #<span id="detail-id"></span></div>
+                <div class="info-row"><b>Type:</b> <span id="detail-type"></span></div>
                 <div class="stats-box">
-                    <div class="stat-row">HP <b id="stat-hp"></b></div>
-                    <div class="stat-row">ATK <b id="stat-attack"></b></div>
-                    <div class="stat-row">DEF <b id="stat-defense"></b></div>
+                    <div class="stat-item">HP: <span id="stat-hp"></span></div>
+                    <div class="stat-item">ATK: <span id="stat-attack"></span></div>
+                    <div class="stat-item">DEF: <span id="stat-defense"></span></div>
                 </div>
             </div>
         </div>

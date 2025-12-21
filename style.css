@@ -1,109 +1,123 @@
 :root {
     --primary: #2c3e50;
     --secondary: #3498db;
-    --accent: #e74c3c;
-    --bg-color: #f0f2f5;
-    --white: #ffffff;
+    --bg: #f8faff;
+    --card: #ffffff;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    background-color: var(--bg-color);
-    /* Optional: Add a subtle forest or pattern background here */
-    background-image: linear-gradient(rgba(240, 242, 245, 0.9), rgba(240, 242, 245, 0.9)), 
-                      url('https://www.transparenttextures.com/patterns/cubes.png');
+    font-family: 'Lexend', sans-serif;
+    background: var(--bg);
     margin: 0;
     color: #333;
 }
 
-/* --- Header & Nav --- */
 header {
     background: var(--primary);
     padding: 1rem 5%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-.logo { color: white; font-weight: bold; font-size: 1.5rem; }
-
-nav ul { list-style: none; display: flex; gap: 2rem; margin: 0; }
-nav a { color: #bdc3c7; text-decoration: none; font-weight: bold; transition: 0.3s; }
-nav a.active, nav a:hover { color: white; border-bottom: 2px solid var(--secondary); }
-
-/* --- Section Layout --- */
-.page-section { display: none; padding: 3rem 5%; text-align: center; min-height: 80vh; }
-.page-section.active { display: block; animation: fadeIn 0.5s ease; }
-
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-/* --- Game UI --- */
-#game-container {
-    max-width: 480px;
-    margin: 0 auto 2rem;
-    background: var(--white);
-    padding: 2.5rem;
-    border-radius: 25px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-    border: 1px solid #eee;
-}
-
-.score-board {
-    background: var(--primary);
     color: white;
-    padding: 8px 20px;
-    border-radius: 50px;
-    display: inline-block;
-    font-weight: bold;
-    margin-bottom: 1.5rem;
-    font-size: 0.9rem;
+    position: sticky; top: 0; z-index: 1000;
 }
 
-#game-image {
-    height: 200px;
-    filter: brightness(0); /* The Silhouette */
-    transition: filter 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    margin-bottom: 1.5rem;
+nav ul { list-style: none; display: flex; gap: 20px; }
+nav a { color: #bdc3c7; text-decoration: none; font-weight: bold; }
+nav a.active { color: white; border-bottom: 2px solid var(--secondary); }
+
+.page-section { display: none; padding: 40px 5%; animation: fadeIn 0.5s; }
+.page-section.active { display: block; }
+
+/* --- About Us Character Gallery --- */
+.character-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
 }
 
+.char-card {
+    background: var(--card);
+    padding: 30px;
+    border-radius: 25px;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    transition: 0.3s;
+}
+
+.char-card:hover { transform: translateY(-10px); }
+
+.avatar-box {
+    position: relative;
+    height: 120px;
+    margin-bottom: 20px;
+}
+
+.pkmn-buddy {
+    height: 60px;
+    position: absolute;
+    bottom: 0; right: 20%;
+    z-index: 2;
+}
+
+.trainer-icon {
+    width: 80px; height: 80px;
+    background: #e0e0e0;
+    border-radius: 50%;
+    margin: 0 auto;
+    border: 4px solid var(--secondary);
+}
+
+/* Color placeholders for the kids */
+.boy-blonde-curly { background: #ffeaa7; } /* Dez */
+.girl-blonde-black { background: #fab1a0; } /* Izzy */
+.boy-blonde-straight { background: #74b9ff; } /* Wes */
+.boy-toddler { background: #55efc4; } /* Simeon */
+.baby { background: #a29bfe; } /* Ezra */
+
+/* --- Game Container --- */
+#game-container {
+    max-width: 500px;
+    margin: 40px auto;
+    background: var(--card);
+    padding: 30px;
+    border-radius: 30px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+}
+
+#game-image { height: 180px; filter: brightness(0); transition: 0.5s; }
 #game-image.revealed { filter: brightness(1); }
 
-#game-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
+#game-options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
 #game-options button {
-    padding: 14px;
-    border: 2px solid #eee;
-    background: white;
-    border-radius: 12px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s;
+    padding: 12px; border: 2px solid #eee; border-radius: 15px; 
+    background: white; font-weight: bold; cursor: pointer;
 }
 
-#game-options button:hover { border-color: var(--secondary); background: #f0faff; transform: translateY(-2px); }
-
 /* --- Pokedex Grid --- */
-.gen-nav { margin: 2rem 0; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-.gen-btn { padding: 10px 20px; border-radius: 20px; border: 2px solid var(--secondary); background: transparent; color: var(--secondary); font-weight: bold; cursor: pointer; }
-.gen-btn.active { background: var(--secondary); color: white; }
+#pokemon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+}
 
-#pokemon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto; }
-.pokemon-card { background: white; padding: 1.5rem; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; transition: 0.3s; }
-.pokemon-card:hover { transform: translateY(-8px); box-shadow: 0 12px 20px rgba(0,0,0,0.1); }
-.pokemon-card img { width: 100px; height: 100px; }
+.pokemon-card {
+    background: white; padding: 20px; border-radius: 20px;
+    text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.04);
+    cursor: pointer;
+}
 
 /* --- Modal --- */
-.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 2000; align-items: center; justify-content: center; }
+.modal {
+    display: none; position: fixed; inset: 0; 
+    background: rgba(0,0,0,0.7); backdrop-filter: blur(10px);
+    z-index: 2000; align-items: center; justify-content: center;
+}
 .modal.active { display: flex; }
-.modal-content { background: white; width: 90%; max-width: 400px; padding: 2.5rem; border-radius: 30px; position: relative; text-align: center; }
-#close-modal { position: absolute; top: 15px; right: 20px; font-size: 2rem; border: none; background: none; cursor: pointer; color: #999; }
+.modal-content {
+    background: white; padding: 40px; border-radius: 30px;
+    width: 90%; max-width: 400px; text-align: center;
+}
 
-#detail-info { text-align: left; background: #f9f9f9; padding: 1.5rem; border-radius: 20px; margin-top: 1rem; }
-.stat-row { display: flex; justify-content: space-between; margin: 10px 0; font-weight: bold; }
-.stat-value { background: var(--secondary); color: white; padding: 2px 12px; border-radius: 20px; font-size: 0.85rem; }
-
-.cta-btn { background: var(--secondary); color: white; padding: 15px 30px; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 2rem; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4); }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }

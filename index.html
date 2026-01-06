@@ -27,6 +27,7 @@
         <div class="hero">
             <div id="game-container">
                 <div class="score-board">STREAK: <span id="current-score">0</span> | BEST: <span id="high-score">0</span></div>
+                <h2 id="shiny-alert" class="hidden">✨ SHINY POKEMON DETECTED! ✨</h2>
                 <h2 class="game-title">Who's That Pokémon?</h2>
                 <div class="game-box">
                     <img id="game-image" src="" alt="Mystery Pokemon">
@@ -59,12 +60,12 @@
             <div class="char-card dez">
                 <div class="avatar-box anim-float">
                     <div class="trainer-ring">
-                        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Dez&hair=curly&hairColor=2c3e50&eyebrows=variant01" class="trainer-pic" alt="Dez">
+                        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Jude" class="trainer-pic" alt="Dez">
                     </div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif" class="pkmn-buddy" alt="Pikachu">
                 </div>
                 <div class="char-info">
-                    <h3>Trainer Dez</h3>
+                    <h3>Trainer Dez (13)</h3>
                     <p>The Master Strategist and the smartest of all people. Unbeatable battle tactics.</p>
                 </div>
             </div>
@@ -72,12 +73,12 @@
             <div class="char-card izzy">
                 <div class="avatar-box anim-float">
                     <div class="trainer-ring">
-                        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Izzy&hair=long&hairColor=9b59b6&mouth=smile" class="trainer-pic" alt="Izzy">
+                        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Molly" class="trainer-pic" alt="Izzy">
                     </div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/133.gif" class="pkmn-buddy" alt="Eevee">
                 </div>
                 <div class="char-info">
-                    <h3>Trainer Izzy</h3>
+                    <h3>Trainer Izzy (10)</h3>
                     <p>The Versatile Voyager and Gooder than everyone. Brings out the best in every team.</p>
                 </div>
             </div>
@@ -85,39 +86,39 @@
             <div class="char-card wes">
                 <div class="avatar-box anim-shake">
                     <div class="trainer-ring">
-                        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Wes&hair=short&hairColor=e67e22" class="trainer-pic" alt="Wes">
+                        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Oliver" class="trainer-pic" alt="Wes">
                     </div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/4.gif" class="pkmn-buddy" alt="Charmander">
                 </div>
                 <div class="char-info">
-                    <h3>Trainer Wes</h3>
-                    <p>The Firebrand and the most technological. Fueled by high energy and fast-paced battles.</p>
+                    <h3>Trainer Wes (6)</h3>
+                    <p>The Firebrand and the most technological. Fueled by high energy.</p>
                 </div>
             </div>
 
             <div class="char-card simeon">
                 <div class="avatar-box anim-float">
                     <div class="trainer-ring">
-                        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Simeon&hair=short&hairColor=2ecc71&mouth=openSmile" class="trainer-pic" alt="Simeon">
+                        <img src="https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=Simeon" class="trainer-pic" alt="Simeon">
                     </div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/1.gif" class="pkmn-buddy" alt="Bulbasaur">
                 </div>
                 <div class="char-info">
-                    <h3>Trainer Simeon</h3>
-                    <p>The Zen Master but sometimes not very Zen. Expert at maintaining a calm, relaxed vibe.</p>
+                    <h3>Trainer Simeon (3)</h3>
+                    <p>The Zen Master but sometimes not very Zen. Maintaining a calm, relaxed vibe.</p>
                 </div>
             </div>
 
             <div class="char-card ezra">
                 <div class="avatar-box anim-bounce">
                     <div class="trainer-ring">
-                        <img src="https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=Ezra&hair=none&eyebrows=variant10&mouth=variant05" class="trainer-pic" alt="Ezra">
+                        <img src="https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=Baby&mouth=smile" class="trainer-pic" alt="Ezra">
                     </div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/7.gif" class="pkmn-buddy" alt="Squirtle">
                 </div>
                 <div class="char-info">
-                    <h3>Rookie Ezra</h3>
-                    <p>The Rising Star and the cutest trainer ever. The newest member with unlimited potential.</p>
+                    <h3>Rookie Ezra (4m)</h3>
+                    <p>The Rising Star and the cutest trainer ever. The newest member of the squad.</p>
                 </div>
             </div>
 
@@ -167,7 +168,10 @@
     </section>
 
     <div id="summon-overlay" class="hidden">
-        <div class="poke-ball-loader"></div>
+        <div class="loader-wrap">
+            <div class="poke-ball-loader"></div>
+            <p>Summoning...</p>
+        </div>
     </div>
 
     <div id="detail-modal" class="modal">
@@ -179,7 +183,6 @@
             </div>
             <div id="detail-info">
                 <p>#<span id="detail-id"></span> | <span id="detail-type"></span></p>
-                <p class="weakness-tag">Weaknesses: <span id="detail-weakness"></span></p>
                 <div class="stat-grid">
                     <div>HP: <span id="stat-hp"></span></div>
                     <div>ATK: <span id="stat-attack"></span></div>

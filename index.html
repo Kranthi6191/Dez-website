@@ -25,32 +25,30 @@
 
     <section id="home" class="page-section active">
         <div class="hero">
-            <h1>Welcome to Our Poke World</h1>
             <div id="game-container">
-                <div class="score-board">Streak: <span id="current-score">0</span> | Best: <span id="high-score">0</span></div>
-                <h2>Who's That Pokémon?</h2>
+                <div class="score-board">STREAK: <span id="current-score">0</span> | BEST: <span id="high-score">0</span></div>
+                <h2 class="game-title">Who's That Pokémon?</h2>
                 <div class="game-box">
                     <img id="game-image" src="" alt="Mystery Pokemon">
                     <div id="game-options"></div>
                     <p id="game-feedback"></p>
                 </div>
             </div>
-
+            
             <div id="leaderboard-container">
-                <h3>Elite Trainer Leaderboard</h3>
+                <h3>Elite Top 5 Champions</h3>
                 <table id="leaderboard-table">
                     <thead>
                         <tr>
-                            <th>Rank</th>
-                            <th>Trainer</th>
-                            <th>Streak</th>
+                            <th>RANK</th>
+                            <th>TRAINER</th>
+                            <th>STREAK</th>
                         </tr>
                     </thead>
                     <tbody id="leaderboard-body"></tbody>
                 </table>
             </div>
-
-            <button class="cta-btn" onclick="switchPage('pokedex')">Open Pokedex</button>
+            <button class="cta-btn" onclick="switchPage('pokedex')">Enter the Pokedex</button>
         </div>
     </section>
 
@@ -59,67 +57,77 @@
         <div class="character-grid">
             
             <div class="char-card dez">
-                <div class="avatar-box anim-smart">
-                    <div class="trainer-badge">
-                        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Felix&hair=curly&skinColor=f9c9b6" class="trainer-pic" alt="Dez">
+                <div class="avatar-box anim-float">
+                    <div class="trainer-ring">
+                        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Dez&hair=curly&hairColor=2c3e50&eyebrows=variant01" class="trainer-pic" alt="Dez">
                     </div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif" class="pkmn-buddy" alt="Pikachu">
                 </div>
-                <h3>Trainer Dez</h3>
-                <p>The Master Strategist and the smartest of all people. Known for pro-trainer logic and unbeatable battle tactics.</p>
+                <div class="char-info">
+                    <h3>Trainer Dez</h3>
+                    <p>The Master Strategist and the smartest of all people. Unbeatable battle tactics.</p>
+                </div>
             </div>
 
             <div class="char-card izzy">
-                <div class="avatar-box anim-beauty">
-                    <div class="trainer-badge">
-                        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Molly&skinColor=f9c9b6" class="trainer-pic" alt="Izzy">
+                <div class="avatar-box anim-float">
+                    <div class="trainer-ring">
+                        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Izzy&hair=long&hairColor=9b59b6&mouth=smile" class="trainer-pic" alt="Izzy">
                     </div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/133.gif" class="pkmn-buddy" alt="Eevee">
                 </div>
-                <h3>Trainer Izzy</h3>
-                <p>The Versatile Voyager and Gooder than everyone. A top-tier trainer who brings out the best in every Pokémon team.</p>
+                <div class="char-info">
+                    <h3>Trainer Izzy</h3>
+                    <p>The Versatile Voyager and Gooder than everyone. Brings out the best in every team.</p>
+                </div>
             </div>
 
             <div class="char-card wes">
-                <div class="avatar-box anim-energy">
-                    <div class="trainer-badge">
-                        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Oliver&skinColor=f9c9b6" class="trainer-pic" alt="Wes">
+                <div class="avatar-box anim-shake">
+                    <div class="trainer-ring">
+                        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Wes&hair=short&hairColor=e67e22" class="trainer-pic" alt="Wes">
                     </div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/4.gif" class="pkmn-buddy" alt="Charmander">
                 </div>
-                <h3>Trainer Wes</h3>
-                <p>The Firebrand and the most technological. Fueled by high energy and a passion for fast-paced Pokémon battles.</p>
+                <div class="char-info">
+                    <h3>Trainer Wes</h3>
+                    <p>The Firebrand and the most technological. Fueled by high energy and fast-paced battles.</p>
+                </div>
             </div>
 
             <div class="char-card simeon">
-                <div class="avatar-box anim-chill">
-                    <div class="trainer-badge">
-                        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Simeon&skinColor=f9c9b6" class="trainer-pic" alt="Simeon">
+                <div class="avatar-box anim-float">
+                    <div class="trainer-ring">
+                        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Simeon&hair=short&hairColor=2ecc71&mouth=openSmile" class="trainer-pic" alt="Simeon">
                     </div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/1.gif" class="pkmn-buddy" alt="Bulbasaur">
                 </div>
-                <h3>Trainer Simeon</h3>
-                <p>The Zen Master but sometimes not very Zen. Expert at maintaining a calm, relaxed vibe.</p>
+                <div class="char-info">
+                    <h3>Trainer Simeon</h3>
+                    <p>The Zen Master but sometimes not very Zen. Expert at maintaining a calm, relaxed vibe.</p>
+                </div>
             </div>
 
             <div class="char-card ezra">
-                <div class="avatar-box anim-cute">
-                    <div class="trainer-badge">
-                        <img src="https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=Baby&skinColor=f9c9b6" class="trainer-pic" alt="Ezra">
+                <div class="avatar-box anim-bounce">
+                    <div class="trainer-ring">
+                        <img src="https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=Ezra&hair=none&eyebrows=variant10&mouth=variant05" class="trainer-pic" alt="Ezra">
                     </div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/7.gif" class="pkmn-buddy" alt="Squirtle">
                 </div>
-                <h3>Rookie Ezra</h3>
-                <p>The Rising Star and the cutest trainer ever. The newest member of the squad with unlimited potential.</p>
+                <div class="char-info">
+                    <h3>Rookie Ezra</h3>
+                    <p>The Rising Star and the cutest trainer ever. The newest member with unlimited potential.</p>
+                </div>
             </div>
 
         </div>
     </section>
 
     <section id="pokedex" class="page-section">
-        <div class="gen-header">
+        <div class="pokedex-container">
             <h1 id="pokedex-title">Generation 1</h1>
-            <div class="search-wrap">
+            <div class="controls">
                 <input type="text" id="pkmn-search" placeholder="Search name or ID...">
                 <select id="type-filter" onchange="filterByType()">
                     <option value="all">All Types</option>
@@ -141,45 +149,44 @@
                     <option value="steel">Steel</option>
                     <option value="fairy">Fairy</option>
                 </select>
-                <button onclick="handleSearch()" class="search-btn">Search</button>
+                <button onclick="handleSearch()" class="search-btn">Find</button>
             </div>
-            <div class="gen-nav">
-                <button class="gen-btn active" onclick="changeGen(1, 151, 'Gen 1', this)">1</button>
-                <button class="gen-btn" onclick="changeGen(152, 251, 'Gen 2', this)">2</button>
-                <button class="gen-btn" onclick="changeGen(252, 386, 'Gen 3', this)">3</button>
-                <button class="gen-btn" onclick="changeGen(387, 493, 'Gen 4', this)">4</button>
-                <button class="gen-btn" onclick="changeGen(494, 649, 'Gen 5', this)">5</button>
-                <button class="gen-btn" onclick="changeGen(650, 721, 'Gen 6', this)">6</button>
-                <button class="gen-btn" onclick="changeGen(722, 809, 'Gen 7', this)">7</button>
-                <button class="gen-btn" onclick="changeGen(810, 905, 'Gen 8', this)">8</button>
-                <button class="gen-btn" onclick="changeGen(906, 1025, 'Gen 9', this)">9</button>
+            <div class="gen-tabs">
+                <button class="gen-tab active" onclick="changeGen(1, 151, 'Gen 1', this)">1</button>
+                <button class="gen-tab" onclick="changeGen(152, 251, 'Gen 2', this)">2</button>
+                <button class="gen-tab" onclick="changeGen(252, 386, 'Gen 3', this)">3</button>
+                <button class="gen-tab" onclick="changeGen(387, 493, 'Gen 4', this)">4</button>
+                <button class="gen-tab" onclick="changeGen(494, 649, 'Gen 5', this)">5</button>
+                <button class="gen-tab" onclick="changeGen(650, 721, 'Gen 6', this)">6</button>
+                <button class="gen-tab" onclick="changeGen(722, 809, 'Gen 7', this)">7</button>
+                <button class="gen-tab" onclick="changeGen(810, 905, 'Gen 8', this)">8</button>
+                <button class="gen-tab" onclick="changeGen(906, 1025, 'Gen 9', this)">9</button>
             </div>
+            <main id="pokemon-grid"></main>
         </div>
-        <main id="pokemon-grid"></main>
     </section>
 
     <div id="summon-overlay" class="hidden">
-        <div class="summon-ball"></div>
-        <div class="summon-flash"></div>
+        <div class="poke-ball-loader"></div>
     </div>
 
     <div id="detail-modal" class="modal">
-        <div class="modal-content">
+        <div class="modal-card">
             <button id="close-modal">&times;</button>
             <h2 id="detail-name"></h2>
-            <img id="detail-image" src="" alt="">
+            <div class="detail-img-box">
+                <img id="detail-image" src="" alt="">
+            </div>
             <div id="detail-info">
-                <div class="info-row"><b>ID:</b> #<span id="detail-id"></span></div>
-                <div class="info-row"><b>Type:</b> <span id="detail-type"></span></div>
-                <div class="info-row" style="color: #e74c3c;"><b>Weaknesses:</b> <span id="detail-weakness"></span></div>
-                <div class="stats-box">
-                    <div class="stat-item">HP: <span id="stat-hp"></span></div>
-                    <div class="stat-item">ATK: <span id="stat-attack"></span></div>
-                    <div class="stat-item">DEF: <span id="stat-defense"></span></div>
+                <p>#<span id="detail-id"></span> | <span id="detail-type"></span></p>
+                <p class="weakness-tag">Weaknesses: <span id="detail-weakness"></span></p>
+                <div class="stat-grid">
+                    <div>HP: <span id="stat-hp"></span></div>
+                    <div>ATK: <span id="stat-attack"></span></div>
+                    <div>DEF: <span id="stat-defense"></span></div>
                 </div>
-                <div id="evolution-section">
-                    <hr>
-                    <h4>Evolution Path</h4>
+                <div class="evo-path">
+                    <h4>Evolution Family</h4>
                     <div id="evolution-chain"></div>
                 </div>
             </div>

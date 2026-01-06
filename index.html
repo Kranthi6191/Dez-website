@@ -28,8 +28,8 @@
 
     <section id="home" class="page-section active">
         <div class="game-selector">
-            <button class="game-btn active" onclick="switchGame('guess')">Who's That?</button>
-            <button class="game-btn" onclick="switchGame('type')">Type Master</button>
+            <button class="game-btn active" onclick="switchGame('guess', this)">Who's That?</button>
+            <button class="game-btn" onclick="switchGame('type', this)">Type Master</button>
         </div>
 
         <div id="game-container">
@@ -49,7 +49,7 @@
         </div>
         
         <div id="leaderboard-container">
-            <h3>Top 5 Champions</h3>
+            <h3>Elite Top 5 Champions</h3>
             <table id="leaderboard-table">
                 <thead><tr><th>RANK</th><th>TRAINER</th><th>STREAK</th></tr></thead>
                 <tbody id="leaderboard-body"></tbody>
@@ -65,28 +65,28 @@
                     <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Felix&skinColor=f9c9b6" class="trainer-pic"></div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif" class="pkmn-buddy">
                 </div>
-                <div class="char-info"><h3>Trainer Dez</h3><p>Master Strategist and the smartest of all people. Known for unbeatable tactics.</p></div>
+                <div class="char-info"><h3>Trainer Dez</h3><p>The Master Strategist and the smartest of all people. Known for pro-trainer tactics.</p></div>
             </div>
             <div class="char-card izzy">
                 <div class="avatar-box anim-float">
                     <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Molly&skinColor=f9c9b6" class="trainer-pic"></div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/133.gif" class="pkmn-buddy">
                 </div>
-                <div class="char-info"><h3>Trainer Izzy</h3><p>Versatile Voyager and Gooder than everyone. Brings out the best in team synergy.</p></div>
+                <div class="char-info"><h3>Trainer Izzy</h3><p>The Versatile Voyager and Gooder than everyone. Brings out the best in teams.</p></div>
             </div>
             <div class="char-card wes">
                 <div class="avatar-box anim-shake">
                     <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Oliver&skinColor=f9c9b6" class="trainer-pic"></div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/4.gif" class="pkmn-buddy">
                 </div>
-                <div class="char-info"><h3>Trainer Wes</h3><p>Technological Firebrand fueled by high energy and speed.</p></div>
+                <div class="char-info"><h3>Trainer Wes</h3><p>The Technological Firebrand fueled by high energy and speed.</p></div>
             </div>
             <div class="char-card simeon">
                 <div class="avatar-box anim-float">
                     <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=Simeon&skinColor=f9c9b6" class="trainer-pic"></div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/1.gif" class="pkmn-buddy">
                 </div>
-                <div class="char-info"><h3>Trainer Simeon</h3><p>Zen Master expert at maintaining a calm vibe even in the heat of battle.</p></div>
+                <div class="char-info"><h3>Trainer Simeon</h3><p>The Zen Master but sometimes not very Zen. Expert at maintaining a calm vibe.</p></div>
             </div>
             <div class="char-card ezra">
                 <div class="avatar-box anim-bounce">

@@ -7,6 +7,8 @@
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body>
 
@@ -33,6 +35,21 @@
                     <p id="game-feedback"></p>
                 </div>
             </div>
+
+            <div id="leaderboard-container">
+                <h3>Elite Trainer Leaderboard</h3>
+                <table id="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Trainer</th>
+                            <th>Streak</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard-body"></tbody>
+                </table>
+            </div>
+
             <button class="cta-btn" onclick="switchPage('pokedex')">Open Pokedex</button>
         </div>
     </section>
@@ -48,7 +65,7 @@
                     </div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif" class="pkmn-buddy" alt="Pikachu">
                 </div>
-                <h3>Trainer Dez </h3>
+                <h3>Trainer Dez</h3>
                 <p>The Master Strategist and the smartest of all people. Known for pro-trainer logic and unbeatable battle tactics.</p>
             </div>
 
@@ -59,7 +76,7 @@
                     </div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/133.gif" class="pkmn-buddy" alt="Eevee">
                 </div>
-                <h3>Trainer Izzy </h3>
+                <h3>Trainer Izzy</h3>
                 <p>The Versatile Voyager and Gooder than everyone. A top-tier trainer who brings out the best in every Pokémon team.</p>
             </div>
 
@@ -70,7 +87,7 @@
                     </div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/4.gif" class="pkmn-buddy" alt="Charmander">
                 </div>
-                <h3>Trainer Wes </h3>
+                <h3>Trainer Wes</h3>
                 <p>The Firebrand and the most technological. Fueled by high energy and a passion for fast-paced Pokémon battles.</p>
             </div>
 
@@ -81,7 +98,7 @@
                     </div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/1.gif" class="pkmn-buddy" alt="Bulbasaur">
                 </div>
-                <h3>Trainer Simeon </h3>
+                <h3>Trainer Simeon</h3>
                 <p>The Zen Master but sometimes not very Zen. Expert at maintaining a calm, relaxed vibe even in the heat of battle.</p>
             </div>
 
@@ -92,7 +109,7 @@
                     </div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/7.gif" class="pkmn-buddy" alt="Squirtle">
                 </div>
-                <h3>Rookie Ezra </h3>
+                <h3>Rookie Ezra</h3>
                 <p>The Rising Star and the cutest trainer ever. The newest member of the squad with unlimited potential.</p>
             </div>
 
@@ -104,7 +121,27 @@
             <h1 id="pokedex-title">Generation 1</h1>
             
             <div class="search-wrap">
-                <input type="text" id="pkmn-search" placeholder="Search name or ID...">
+                <input type="text" id="pkmn-search" placeholder="Name or ID...">
+                <select id="type-filter" onchange="filterByType()">
+                    <option value="all">All Types</option>
+                    <option value="fire">Fire</option>
+                    <option value="water">Water</option>
+                    <option value="grass">Grass</option>
+                    <option value="electric">Electric</option>
+                    <option value="ice">Ice</option>
+                    <option value="fighting">Fighting</option>
+                    <option value="poison">Poison</option>
+                    <option value="ground">Ground</option>
+                    <option value="flying">Flying</option>
+                    <option value="psychic">Psychic</option>
+                    <option value="bug">Bug</option>
+                    <option value="rock">Rock</option>
+                    <option value="ghost">Ghost</option>
+                    <option value="dragon">Dragon</option>
+                    <option value="dark">Dark</option>
+                    <option value="steel">Steel</option>
+                    <option value="fairy">Fairy</option>
+                </select>
                 <button onclick="handleSearch()" class="search-btn">Search</button>
             </div>
 
@@ -141,6 +178,11 @@
                     <div class="stat-item">HP: <span id="stat-hp"></span></div>
                     <div class="stat-item">ATK: <span id="stat-attack"></span></div>
                     <div class="stat-item">DEF: <span id="stat-defense"></span></div>
+                </div>
+                <div id="evolution-section">
+                    <hr>
+                    <h4>Evolution Path</h4>
+                    <div id="evolution-chain"></div>
                 </div>
             </div>
         </div>

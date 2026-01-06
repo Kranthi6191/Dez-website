@@ -90,7 +90,6 @@ nav a.active {
   max-height: 90vh;
   overflow-y: auto;
 }
-
 /* animations */
 @keyframes slideIn {
   from { opacity: 0; transform: translateY(20px); }

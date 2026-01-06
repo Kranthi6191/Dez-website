@@ -13,7 +13,7 @@
 <body class="light-mode">
 
     <header>
-        <div class="logo">Wright's Pet Pokemons</div>
+        <div class="logo"><a href="#" onclick="switchPage('home')">Wright's Pet Pokemons</a></div>
         <div class="header-right">
             <button id="theme-toggle" onclick="toggleTheme()">🌙 Night Mode</button>
             <nav>
@@ -62,52 +62,52 @@
         <div class="character-grid">
             <div class="char-card dez">
                 <div class="avatar-box anim-float">
-                    <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Buster" class="trainer-pic"></div>
+                    <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Felix&skinColor=f9c9b6" class="trainer-pic"></div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif" class="pkmn-buddy">
                 </div>
                 <div class="char-info">
-                    <h3>Dez</h3>
+                    <h3>Dez (13)</h3>
                     <p>The Master Strategist and the smartest of all people. Known for pro-trainer logic and unbeatable battle tactics.</p>
                 </div>
             </div>
             <div class="char-card izzy">
                 <div class="avatar-box anim-float">
-                    <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Cali" class="trainer-pic"></div>
+                    <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Molly&skinColor=f9c9b6" class="trainer-pic"></div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/133.gif" class="pkmn-buddy">
                 </div>
                 <div class="char-info">
-                    <h3>Izzy</h3>
-                    <p>The Versatile Voyager and Gooder than everyone. A top-tier trainer who brings out the best in every Pokémon team.</p>
+                    <h3>Izzy (10)</h3>
+                    <p>The Versatile Voyager and Gooder than everyone. A top-tier trainer who brings out the best in team synergy.</p>
                 </div>
             </div>
             <div class="char-card wes">
                 <div class="avatar-box anim-shake">
-                    <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Sawyer" class="trainer-pic"></div>
+                    <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Oliver&skinColor=f9c9b6" class="trainer-pic"></div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/4.gif" class="pkmn-buddy">
                 </div>
                 <div class="char-info">
-                    <h3>Wes</h3>
-                    <p>The Firebrand and the most technological. Fueled by high energy and a passion for fast-paced Pokémon battles.</p>
+                    <h3>Wes (6)</h3>
+                    <p>The Technological Firebrand. Fueled by high energy and a passion for fast-paced Pokémon battles.</p>
                 </div>
             </div>
             <div class="char-card simeon">
                 <div class="avatar-box anim-float">
-                    <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=Simeon&radius=50" class="trainer-pic"></div>
+                    <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=Simeon&skinColor=f9c9b6" class="trainer-pic"></div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/1.gif" class="pkmn-buddy">
                 </div>
                 <div class="char-info">
-                    <h3>Simeon</h3>
-                    <p>The Zen Master but sometimes not very Zen. Expert at maintaining a calm, relaxed vibe even in the heat of battle.</p>
+                    <h3>Simeon (3)</h3>
+                    <p>The Zen Master. Expert at maintaining a calm, relaxed vibe even in the heat of battle.</p>
                 </div>
             </div>
             <div class="char-card ezra">
                 <div class="avatar-box anim-bounce">
-                    <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=Baby" class="trainer-pic"></div>
+                    <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=Ezra&skinColor=f9c9b6" class="trainer-pic"></div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/7.gif" class="pkmn-buddy">
                 </div>
                 <div class="char-info">
-                    <h3>Ezra</h3>
-                    <p>The Rising Star and the cutest trainer ever. The newest member of the squad with unlimited potential.</p>
+                    <h3>Ezra (4m)</h3>
+                    <p>The Rising Star and the cutest trainer ever. The newest member with unlimited potential.</p>
                 </div>
             </div>
         </div>
@@ -132,12 +132,7 @@
         <main id="pokemon-grid"></main>
     </section>
 
-    <div id="summon-overlay" class="hidden">
-        <div class="loader-wrap">
-            <div class="poke-ball-loader"></div>
-            <p>Summoning...</p>
-        </div>
-    </div>
+    <div id="summon-overlay" class="hidden"><div class="loader-wrap"><div class="poke-ball-loader"></div><p>Summoning...</p></div></div>
 
     <div id="detail-modal" class="modal">
         <div class="modal-card">
@@ -152,14 +147,10 @@
                     <div>ATK: <span id="stat-attack"></span></div>
                     <div>DEF: <span id="stat-defense"></span></div>
                 </div>
-                <div class="evo-path">
-                    <h4>Evolution Family</h4>
-                    <div id="evolution-chain"></div>
-                </div>
+                <div class="evo-path"><h4>Evolution Family</h4><div id="evolution-chain"></div></div>
             </div>
         </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>

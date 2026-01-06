@@ -15,41 +15,42 @@ nav a.active { color: white; border-bottom: 3px solid var(--accent); }
 .page-section.active { display: block; animation: slideIn 0.4s ease-out; }
 
 .character-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
-.char-card { background: var(--card); width: 280px; border-radius: 30px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); border-bottom: 8px solid #ddd; padding-bottom: 15px; overflow: hidden; }
-
+.char-card { background: var(--card); width: 260px; border-radius: 30px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); border-bottom: 8px solid #ddd; padding-bottom: 15px; overflow: hidden; }
 .avatar-box { height: 180px; position: relative; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.03); }
-.trainer-ring { width: 110px; height: 110px; border-radius: 50%; border: 4px solid #fff; overflow: hidden; background: white; }
+.trainer-ring { width: 100px; height: 100px; border-radius: 50%; border: 4px solid #fff; overflow: hidden; background: white; }
 .trainer-pic { width: 100%; height: 100%; object-fit: cover; }
-.pkmn-buddy { height: 85px; position: absolute; bottom: 10px; right: 15px; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2)); }
+.pkmn-buddy { height: 80px; position: absolute; bottom: 10px; right: 15px; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2)); }
 
 .dez { border-color: var(--gold); } .izzy { border-color: #9b59b6; } .wes { border-color: #e67e22; } .simeon { border-color: #2ecc71; } .ezra { border-color: #3498db; }
 
-#game-container { max-width: 500px; margin: 20px auto; background: var(--card); padding: 30px; border-radius: 35px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); border: 2px solid rgba(255,255,255,0.5); }
-#game-image { height: 180px; filter: brightness(0); transition: 0.4s; }
+#game-container { max-width: 500px; margin: 20px auto; background: var(--card); padding: 30px; border-radius: 35px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+#game-image { height: 160px; max-width: 100%; filter: brightness(0); transition: 0.4s; }
 #game-image.revealed { filter: brightness(1); }
 #game-image.shiny { filter: drop-shadow(0 0 20px #f1c40f) brightness(0); }
 #game-image.shiny.revealed { filter: drop-shadow(0 0 20px #f1c40f) brightness(1); }
 
-.game-tab { padding: 12px 25px; border-radius: 25px; border: none; cursor: pointer; background: #ddd; margin: 0 5px; font-weight: bold; }
-.game-tab.active { background: var(--accent); color: white; }
+#log-container, #leaderboard-container { max-width: 500px; margin: 20px auto; background: var(--card); border-radius: 25px; padding: 20px; text-align: left; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+#combat-log { list-style: none; padding: 0; font-size: 0.85rem; max-height: 150px; overflow-y: auto; }
+#combat-log li { padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
 
-#game-options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
-#game-options button { padding: 15px; border-radius: 15px; border: 2px solid #eee; background: white; cursor: pointer; font-weight: bold; color: #333; transition: 0.2s; }
-#game-options button:hover { background: var(--accent); color: white; border-color: var(--accent); }
-
-#pokemon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; margin-top: 30px; }
-.pokemon-card { background: var(--card); padding: 15px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); cursor: pointer; transition: 0.3s; }
-.pokemon-card:hover { transform: translateY(-8px); box-shadow: 0 12px 25px rgba(0,0,0,0.1); }
-.pokemon-card img { width: 100%; height: auto; }
+/* Grid Density: Ensures 7-8 cards per line on desktop */
+#pokemon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; margin-top: 30px; }
+.pokemon-card { background: var(--card); padding: 10px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); cursor: pointer; transition: 0.3s; }
+.pokemon-card:hover { transform: translateY(-5px); }
+.pokemon-card img { width: 100%; max-height: 90px; object-fit: contain; }
 
 #summon-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.9); z-index: 5000; display: flex; align-items: center; justify-content: center; }
 .hidden { display: none !important; }
-.poke-ball-loader { width: 90px; height: 90px; border: 5px solid #000; border-radius: 50%; background: linear-gradient(to bottom, #ff5252 50%, #fff 50%); animation: roll 0.6s infinite linear; }
+.poke-ball-loader { width: 80px; height: 80px; border: 5px solid #000; border-radius: 50%; background: linear-gradient(to bottom, #ff5252 50%, #fff 50%); animation: roll 0.6s infinite linear; margin-bottom: 15px; }
 
 .modal { display: none; position: fixed; z-index: 6000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; }
-.modal-card { background: white; padding: 40px; border-radius: 40px; width: 90%; max-width: 400px; position: relative; text-align: center; }
-.stat-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 20px 0; background: #f8f9fa; padding: 15px; border-radius: 20px; font-weight: bold; }
-.weakness-tag { color: #e74c3c; font-weight: bold; }
+.modal-card { background: white; padding: 25px; border-radius: 35px; width: 95%; max-width: 420px; position: relative; text-align: center; max-height: 90vh; overflow-y: auto; }
+#close-modal { position: absolute; top: 15px; right: 20px; border: none; background: none; font-size: 30px; cursor: pointer; color: #ccc; }
+
+/* Modal Image Fix: Stops it from taking over the screen */
+#detail-image { max-height: 220px; width: auto; max-width: 100%; object-fit: contain; margin-bottom: 10px; }
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 15px 0; background: #f8f9fa; padding: 12px; border-radius: 15px; font-weight: bold; font-size: 0.9rem; }
+.weakness-tag { color: #e74c3c; font-weight: bold; font-size: 0.85rem; }
 
 @keyframes roll { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }

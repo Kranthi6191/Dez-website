@@ -57,7 +57,8 @@ async function initGame() {
 
     options.innerHTML = '';
     let correct = currentMode === 'guess' ? correctName : pkmn.types[0].type.name;
-    let pool = currentMode === 'guess' ? pokemonNameList : ['fire','water','grass','electric','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy','normal'];
+    const typesPool = ['fire','water','grass','electric','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy','normal'];
+    let pool = currentMode === 'guess' ? pokemonNameList : typesPool;
 
     let choices = [correct];
     while(choices.length < 4) {
@@ -137,7 +138,7 @@ function loadLog() {
         log.innerHTML = '';
         snap.forEach(c => {
             const e = c.val();
-            log.innerHTML = `<li>⚔️ <b>${e.trainer || "Trainer"}</b> ended at <b>${e.pokemon}</b> (${e.streak})</li>` + log.innerHTML;
+            log.innerHTML = `<li>⚔️ <b>${e.trainer || "Trainer"}</b> ended streak at <b>${e.pokemon}</b> (${e.streak})</li>` + log.innerHTML;
         });
     });
 }

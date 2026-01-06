@@ -8,7 +8,10 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-let currentScore = 0; let pokemonNameList = []; let isShiny = false; let currentMode = 'guess';
+let currentScore = 0; let pokemonNameList = []; isShiny = false; let currentMode = 'guess';
+
+// FIX: Global definition for Type Master
+const typesPool = ['fire','water','grass','electric','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy','normal'];
 
 const typeWeaknesses = {
     normal: ['fighting'], fire: ['water', 'ground', 'rock'], water: ['electric', 'grass'],
@@ -57,7 +60,6 @@ async function initGame() {
 
     options.innerHTML = '';
     let correct = currentMode === 'guess' ? correctName : pkmn.types[0].type.name;
-    const typesPool = ['fire','water','grass','electric','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy','normal'];
     let pool = currentMode === 'guess' ? pokemonNameList : typesPool;
 
     let choices = [correct];
@@ -93,6 +95,16 @@ function handleGameOver(s, name) {
             db.ref('combatLog').push({ trainer: tName, pokemon: name, streak: s, time: Date.now() });
         }
     }
+}
+
+function switchGame(mode, btn) {
+    currentMode = mode;
+    currentScore = 0; 
+    document.getElementById('current-score').textContent = "0";
+    document.querySelectorAll('.game-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('game-title').textContent = mode === 'guess' ? "Who's That Pokémon?" : "What's the Type?";
+    initGame();
 }
 
 function summonPokemon(pkmn) {
@@ -157,4 +169,9 @@ function loadLB() {
 }
 
 function closeM() { document.getElementById('detail-modal').style.display = 'none'; }
+function toggleTheme() {
+    document.body.classList.toggle('night-mode');
+    document.getElementById('theme-toggle').textContent = document.body.classList.contains('night-mode') ? "☀️ Day Mode" : "🌙 Night Mode";
+}
+
 changeGen(1, 151, 'Gen 1', document.querySelector('.gen-tab')); initGame(); loadLB(); loadLog();

@@ -34,10 +34,10 @@
 
         <div id="game-container">
             <div class="score-board">STREAK: <span id="current-score">0</span></div>
-            <h2 id="shiny-alert" class="hidden">✨ SHINY POKEMON! ✨</h2>
+            <h2 id="shiny-alert" class="hidden">✨ SHINY POKEMON DETECTED! ✨</h2>
             <h2 id="game-title">Who's That Pokémon?</h2>
             <div class="game-box">
-                <img id="game-image" src="" alt="Pokemon">
+                <img id="game-image" src="" alt="Mystery Pokemon">
                 <div id="game-options" class="fancy-options"></div>
                 <p id="game-feedback"></p>
             </div>
@@ -65,35 +65,35 @@
                     <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Felix&skinColor=f9c9b6" class="trainer-pic"></div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif" class="pkmn-buddy">
                 </div>
-                <div class="char-info"><h3>Trainer Dez</h3><p>The Master Strategist and the smartest of all people. Known for pro-trainer logic and unbeatable battle tactics.</p></div>
+                <div class="char-info"><h3>Trainer Dez</h3><p>The Master Strategist and the smartest of all people. Known for unbeatable battle tactics.</p></div>
             </div>
             <div class="char-card izzy">
                 <div class="avatar-box anim-float">
                     <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Molly&skinColor=f9c9b6" class="trainer-pic"></div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/133.gif" class="pkmn-buddy">
                 </div>
-                <div class="char-info"><h3>Trainer Izzy</h3><p>The Versatile Voyager and Gooder than everyone. A top-tier trainer who brings out the best in team synergy.</p></div>
+                <div class="char-info"><h3>Trainer Izzy</h3><p>The Versatile Voyager and Gooder than everyone. Brings out the best in team synergy.</p></div>
             </div>
             <div class="char-card wes">
                 <div class="avatar-box anim-shake">
                     <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Oliver&skinColor=f9c9b6" class="trainer-pic"></div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/4.gif" class="pkmn-buddy">
                 </div>
-                <div class="char-info"><h3>Trainer Wes</h3><p>The Technological Firebrand. Fueled by high energy and a passion for fast-paced Pokémon battles.</p></div>
+                <div class="char-info"><h3>Trainer Wes</h3><p>The Technological Firebrand. Fueled by high energy and fast-paced Pokémon battles.</p></div>
             </div>
             <div class="char-card simeon">
                 <div class="avatar-box anim-float">
                     <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=Simeon&skinColor=f9c9b6" class="trainer-pic"></div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/1.gif" class="pkmn-buddy">
                 </div>
-                <div class="char-info"><h3>Trainer Simeon</h3><p>The Zen Master. Expert at maintaining a calm, relaxed vibe even in the heat of battle.</p></div>
+                <div class="char-info"><h3>Trainer Simeon</h3><p>The Zen Master. Expert at maintaining a calm vibe even in the heat of battle.</p></div>
             </div>
             <div class="char-card ezra">
                 <div class="avatar-box anim-bounce">
                     <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=Baby&skinColor=f9c9b6" class="trainer-pic"></div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/7.gif" class="pkmn-buddy">
                 </div>
-                <div class="char-info"><h3>Rookie Ezra</h3><p>The Rising Star and the cutest trainer ever. The newest member with unlimited potential.</p></div>
+                <div class="char-info"><h3>Rookie Ezra</h3><p>The Rising Star and the cutest trainer ever. Newest member with unlimited potential.</p></div>
             </div>
         </div>
     </section>
@@ -117,13 +117,18 @@
         <main id="pokemon-grid"></main>
     </section>
 
-    <div id="summon-overlay" class="hidden"><div class="loader-wrap"><div class="poke-ball-loader"></div><p>Summoning...</p></div></div>
+    <div id="summon-overlay" class="hidden">
+        <div class="loader-wrap">
+            <div class="poke-ball-loader"></div>
+            <p>Summoning...</p>
+        </div>
+    </div>
 
     <div id="detail-modal" class="modal">
         <div class="modal-card">
             <button id="close-modal" onclick="closeM()">&times;</button>
             <h2 id="detail-name"></h2>
-            <img id="detail-image" src="" alt="Pokemon Art">
+            <img id="detail-image" src="" alt="HD Artwork">
             <div id="detail-info">
                 <p>#<span id="detail-id"></span> | <span id="detail-type"></span></p>
                 <p class="weakness-tag">Weaknesses: <span id="detail-weakness"></span></p>

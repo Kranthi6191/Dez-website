@@ -8,8 +8,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-let trainerName = localStorage.getItem('trainerName') || null;
-let score = 0; let pokemonNameList = []; isShiny = false; let currentMode = 'guess';
+let currentScore = 0; let pokemonNameList = []; let isShiny = false; let currentMode = 'guess';
 
 const typeWeaknesses = {
     normal: ['fighting'], fire: ['water', 'ground', 'rock'], water: ['electric', 'grass'],
@@ -36,28 +35,6 @@ document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', function(e) { e.preventDefault(); switchPage(this.getAttribute('data-target')); });
 });
 
-function checkTrainerName() {
-    if (!trainerName) {
-        trainerName = prompt("Welcome Elite Trainer! Enter your name:");
-        if (trainerName) localStorage.setItem('trainerName', trainerName);
-        else trainerName = "Guest";
-    }
-}
-
-function toggleTheme() {
-    document.body.classList.toggle('night-mode');
-    document.getElementById('theme-toggle').textContent = document.body.classList.contains('night-mode') ? "☀️ Day Mode" : "🌙 Night Mode";
-}
-
-function switchGame(mode) {
-    currentMode = mode;
-    score = 0; document.getElementById('current-score').textContent = "0";
-    document.querySelectorAll('.game-btn').forEach(b => b.classList.remove('active'));
-    event.target.classList.add('active');
-    document.getElementById('game-title').textContent = mode === 'guess' ? "Who's That Pokémon?" : "What's the Type?";
-    initGame();
-}
-
 async function initGame() {
     if (pokemonNameList.length === 0) {
         const res = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=1025`);
@@ -80,8 +57,7 @@ async function initGame() {
 
     options.innerHTML = '';
     let correct = currentMode === 'guess' ? correctName : pkmn.types[0].type.name;
-    const typesPool = ['fire','water','grass','electric','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy','normal'];
-    let pool = currentMode === 'guess' ? pokemonNameList : typesPool;
+    let pool = currentMode === 'guess' ? pokemonNameList : ['fire','water','grass','electric','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy','normal'];
 
     let choices = [correct];
     while(choices.length < 4) {
@@ -94,21 +70,28 @@ async function initGame() {
         btn.onclick = () => {
             img.classList.add('revealed');
             if(choice === correct) {
-                score += isShiny ? 5 : 1;
-                document.getElementById('game-feedback').textContent = "AWESOME!";
+                currentScore += isShiny ? 5 : 1;
+                document.getElementById('game-feedback').textContent = "CORRECT!";
             } else {
-                if (score > 0) {
-                    db.ref('leaderboard').push({ name: trainerName, score: score });
-                    db.ref('combatLog').push({ trainer: trainerName, pokemon: correct.toUpperCase(), streak: score, time: Date.now() });
-                }
-                score = 0;
+                handleGameOver(currentScore, correct.toUpperCase());
+                currentScore = 0;
                 document.getElementById('game-feedback').textContent = `IT WAS ${correct.toUpperCase()}!`;
             }
-            document.getElementById('current-score').textContent = score;
+            document.getElementById('current-score').textContent = currentScore;
             setTimeout(initGame, 2000);
         };
         options.appendChild(btn);
     });
+}
+
+function handleGameOver(s, name) {
+    if (s > 0) {
+        const tName = prompt("NEW RECORD! Enter your Trainer Name:");
+        if (tName) {
+            db.ref('leaderboard').push({ name: tName, score: s });
+            db.ref('combatLog').push({ trainer: tName, pokemon: name, streak: s, time: Date.now() });
+        }
+    }
 }
 
 function summonPokemon(pkmn) {
@@ -129,30 +112,6 @@ async function openModal(pkmn) {
     document.getElementById('stat-attack').textContent = pkmn.stats[1].base_stat;
     document.getElementById('stat-defense').textContent = pkmn.stats[2].base_stat;
     document.getElementById('detail-modal').style.display = 'flex';
-    getEvolutionChain(pkmn);
-}
-
-async function getEvolutionChain(pkmn) {
-    const evoContainer = document.getElementById('evolution-chain');
-    evoContainer.innerHTML = '...';
-    try {
-        const speciesRes = await fetch(pkmn.species.url);
-        const speciesData = await speciesRes.json();
-        const evoRes = await fetch(speciesData.evolution_chain.url);
-        const evoData = await evoRes.json();
-        evoContainer.innerHTML = '';
-        let curr = evoData.chain;
-        while (curr) {
-            const pkmnId = curr.species.url.split('/').slice(-2, -1)[0];
-            const img = document.createElement('img');
-            img.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pkmnId}.png`;
-            img.style.width = "45px";
-            img.onclick = async () => { const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pkmnId}`); summonPokemon(await res.json()); };
-            evoContainer.appendChild(img);
-            curr = curr.evolves_to[0];
-            if (curr) evoContainer.innerHTML += ' <span>→</span> ';
-        }
-    } catch { evoContainer.innerHTML = 'None'; }
 }
 
 async function changeGen(s, e, title, btn) {
@@ -178,26 +137,23 @@ function loadLog() {
         log.innerHTML = '';
         snap.forEach(c => {
             const e = c.val();
-            log.innerHTML = `<li>⚔️ <b>${e.trainer ? e.trainer.toUpperCase() : "TRAINER"}</b> streak ended at <b>${e.pokemon}</b> (${e.streak})</li>` + log.innerHTML;
+            log.innerHTML = `<li>⚔️ <b>${e.trainer || "Trainer"}</b> ended at <b>${e.pokemon}</b> (${e.streak})</li>` + log.innerHTML;
         });
     });
 }
 
 function loadLB() {
-    db.ref('leaderboard').orderByChild('score').on('value', snap => {
+    db.ref('leaderboard').on('value', snap => {
         const lb = document.getElementById('leaderboard-body');
         let scores = [];
-        snap.forEach(c => scores.push({key: c.key, ...c.val()}));
+        snap.forEach(c => scores.push(c.val()));
         scores.sort((a,b) => b.score - a.score);
-        if (scores.length > 5) { for (let i = 5; i < scores.length; i++) db.ref('leaderboard').child(scores[i].key).remove(); scores = scores.slice(0, 5); }
         lb.innerHTML = '';
-        scores.forEach((e, i) => {
-            lb.innerHTML += `<tr><td>#${i+1}</td><td>${e.name ? e.name.toUpperCase() : "TRAINER"}</td><td>${e.score}</td></tr>`;
+        scores.slice(0, 5).forEach((e, i) => {
+            lb.innerHTML += `<tr><td>#${i+1}</td><td>${e.name.toUpperCase()}</td><td>${e.score}</td></tr>`;
         });
     });
 }
 
-function closeM() { document.getElementById('detail-modal').style.display='none'; }
-checkTrainerName();
-changeGen(1, 151, 'Gen 1', document.querySelector('.gen-tab')); 
-initGame(); loadLB(); loadLog();
+function closeM() { document.getElementById('detail-modal').style.display = 'none'; }
+changeGen(1, 151, 'Gen 1', document.querySelector('.gen-tab')); initGame(); loadLB(); loadLog();

@@ -10,188 +10,118 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
-<body>
+<body class="light-mode">
 
     <header>
         <div class="logo">Wright's Pet Pokemons</div>
-        <nav>
-            <ul>
-                <li><a href="#" class="nav-link active" data-target="home">Home</a></li>
-                <li><a href="#" class="nav-link" data-target="about">About Us</a></li>
-                <li><a href="#" class="nav-link" data-target="pokedex">My Pokedex</a></li>
-            </ul>
-        </nav>
+        <div class="header-right">
+            <button id="theme-toggle" onclick="toggleTheme()">🌙 Night Mode</button>
+            <nav>
+                <ul>
+                    <li><a href="#" class="nav-link active" data-target="home">Games</a></li>
+                    <li><a href="#" class="nav-link" data-target="about">Squad</a></li>
+                    <li><a href="#" class="nav-link" data-target="pokedex">Pokedex</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
     <section id="home" class="page-section active">
-        <div class="hero">
-            <div id="game-container">
-                <div class="score-board">STREAK: <span id="current-score">0</span> | BEST: <span id="high-score">0</span></div>
-                <h2 id="shiny-alert" class="hidden">✨ SHINY POKEMON DETECTED! ✨</h2>
-                <h2 class="game-title">Who's That Pokémon?</h2>
-                <div class="game-box">
-                    <img id="game-image" src="" alt="Mystery Pokemon">
-                    <div id="game-options"></div>
-                    <p id="game-feedback"></p>
-                </div>
+        <div class="game-selector">
+            <button class="game-tab active" onclick="switchGame('guess')">Who's That?</button>
+            <button class="game-tab" onclick="switchGame('type')">Type Master</button>
+        </div>
+
+        <div id="game-container">
+            <div class="score-board">STREAK: <span id="current-score">0</span> | BEST: <span id="high-score">0</span></div>
+            <h2 id="shiny-alert" class="hidden">✨ SHINY POKEMON! ✨</h2>
+            <h2 id="game-title">Who's That Pokémon?</h2>
+            <div class="game-box">
+                <img id="game-image" src="" alt="Pokemon">
+                <div id="game-options"></div>
+                <p id="game-feedback"></p>
             </div>
-            
-            <div id="leaderboard-container">
-                <h3>Elite Top 5 Champions</h3>
-                <table id="leaderboard-table">
-                    <thead>
-                        <tr>
-                            <th>RANK</th>
-                            <th>TRAINER</th>
-                            <th>STREAK</th>
-                        </tr>
-                    </thead>
-                    <tbody id="leaderboard-body"></tbody>
-                </table>
-            </div>
-            <button class="cta-btn" onclick="switchPage('pokedex')">Enter the Pokedex</button>
+        </div>
+        
+        <div id="leaderboard-container">
+            <h3>Top 5 Elite Champions</h3>
+            <table id="leaderboard-table">
+                <thead><tr><th>RANK</th><th>TRAINER</th><th>STREAK</th></tr></thead>
+                <tbody id="leaderboard-body"></tbody>
+            </table>
         </div>
     </section>
 
     <section id="about" class="page-section">
         <h1 class="section-title">The Wright Elite Squad</h1>
         <div class="character-grid">
-            
             <div class="char-card dez">
                 <div class="avatar-box anim-float">
-                    <div class="trainer-ring">
-                        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Jude" class="trainer-pic" alt="Dez">
-                    </div>
-                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif" class="pkmn-buddy" alt="Pikachu">
+                    <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Jude" class="trainer-pic"></div>
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif" class="pkmn-buddy">
                 </div>
-                <div class="char-info">
-                    <h3>Trainer Dez (13)</h3>
-                    <p>The Master Strategist and the smartest of all people. Unbeatable battle tactics.</p>
-                </div>
+                <div class="char-info"><h3>Dez (13)</h3><p>Master Strategist.</p></div>
             </div>
-
             <div class="char-card izzy">
                 <div class="avatar-box anim-float">
-                    <div class="trainer-ring">
-                        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Molly" class="trainer-pic" alt="Izzy">
-                    </div>
-                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/133.gif" class="pkmn-buddy" alt="Eevee">
+                    <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Molly" class="trainer-pic"></div>
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/133.gif" class="pkmn-buddy">
                 </div>
-                <div class="char-info">
-                    <h3>Trainer Izzy (10)</h3>
-                    <p>The Versatile Voyager and Gooder than everyone. Brings out the best in every team.</p>
-                </div>
+                <div class="char-info"><h3>Izzy (10)</h3><p>Versatile Voyager.</p></div>
             </div>
-
             <div class="char-card wes">
                 <div class="avatar-box anim-shake">
-                    <div class="trainer-ring">
-                        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Oliver" class="trainer-pic" alt="Wes">
-                    </div>
-                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/4.gif" class="pkmn-buddy" alt="Charmander">
+                    <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Oliver" class="trainer-pic"></div>
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/4.gif" class="pkmn-buddy">
                 </div>
-                <div class="char-info">
-                    <h3>Trainer Wes (6)</h3>
-                    <p>The Firebrand and the most technological. Fueled by high energy.</p>
-                </div>
+                <div class="char-info"><h3>Wes (6)</h3><p>The Firebrand.</p></div>
             </div>
-
             <div class="char-card simeon">
                 <div class="avatar-box anim-float">
-                    <div class="trainer-ring">
-                        <img src="https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=Simeon" class="trainer-pic" alt="Simeon">
-                    </div>
-                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/1.gif" class="pkmn-buddy" alt="Bulbasaur">
+                    <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=Simeon" class="trainer-pic"></div>
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/1.gif" class="pkmn-buddy">
                 </div>
-                <div class="char-info">
-                    <h3>Trainer Simeon (3)</h3>
-                    <p>The Zen Master but sometimes not very Zen. Maintaining a calm, relaxed vibe.</p>
-                </div>
+                <div class="char-info"><h3>Simeon (3)</h3><p>Zen Master.</p></div>
             </div>
-
             <div class="char-card ezra">
                 <div class="avatar-box anim-bounce">
-                    <div class="trainer-ring">
-                        <img src="https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=Baby&mouth=smile" class="trainer-pic" alt="Ezra">
-                    </div>
-                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/7.gif" class="pkmn-buddy" alt="Squirtle">
+                    <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=Baby" class="trainer-pic"></div>
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/7.gif" class="pkmn-buddy">
                 </div>
-                <div class="char-info">
-                    <h3>Rookie Ezra (4m)</h3>
-                    <p>The Rising Star and the cutest trainer ever. The newest member of the squad.</p>
-                </div>
+                <div class="char-info"><h3>Ezra (4m)</h3><p>Rookie Star.</p></div>
             </div>
-
         </div>
     </section>
 
     <section id="pokedex" class="page-section">
-        <div class="pokedex-container">
-            <h1 id="pokedex-title">Generation 1</h1>
-            <div class="controls">
-                <input type="text" id="pkmn-search" placeholder="Search name or ID...">
-                <select id="type-filter" onchange="filterByType()">
-                    <option value="all">All Types</option>
-                    <option value="fire">Fire</option>
-                    <option value="water">Water</option>
-                    <option value="grass">Grass</option>
-                    <option value="electric">Electric</option>
-                    <option value="ice">Ice</option>
-                    <option value="fighting">Fighting</option>
-                    <option value="poison">Poison</option>
-                    <option value="ground">Ground</option>
-                    <option value="flying">Flying</option>
-                    <option value="psychic">Psychic</option>
-                    <option value="bug">Bug</option>
-                    <option value="rock">Rock</option>
-                    <option value="ghost">Ghost</option>
-                    <option value="dragon">Dragon</option>
-                    <option value="dark">Dark</option>
-                    <option value="steel">Steel</option>
-                    <option value="fairy">Fairy</option>
-                </select>
-                <button onclick="handleSearch()" class="search-btn">Find</button>
-            </div>
-            <div class="gen-tabs">
-                <button class="gen-tab active" onclick="changeGen(1, 151, 'Gen 1', this)">1</button>
-                <button class="gen-tab" onclick="changeGen(152, 251, 'Gen 2', this)">2</button>
-                <button class="gen-tab" onclick="changeGen(252, 386, 'Gen 3', this)">3</button>
-                <button class="gen-tab" onclick="changeGen(387, 493, 'Gen 4', this)">4</button>
-                <button class="gen-tab" onclick="changeGen(494, 649, 'Gen 5', this)">5</button>
-                <button class="gen-tab" onclick="changeGen(650, 721, 'Gen 6', this)">6</button>
-                <button class="gen-tab" onclick="changeGen(722, 809, 'Gen 7', this)">7</button>
-                <button class="gen-tab" onclick="changeGen(810, 905, 'Gen 8', this)">8</button>
-                <button class="gen-tab" onclick="changeGen(906, 1025, 'Gen 9', this)">9</button>
-            </div>
-            <main id="pokemon-grid"></main>
+        <div class="controls">
+            <input type="text" id="pkmn-search" placeholder="Search...">
+            <button onclick="handleSearch()" class="search-btn">Find</button>
         </div>
+        <div class="gen-tabs">
+            <button class="gen-tab active" onclick="changeGen(1, 151, 'Gen 1', this)">1</button>
+            <button class="gen-tab" onclick="changeGen(152, 251, 'Gen 2', this)">2</button>
+            <button class="gen-tab" onclick="changeGen(252, 386, 'Gen 3', this)">3</button>
+            <button class="gen-tab" onclick="changeGen(387, 493, 'Gen 4', this)">4</button>
+            <button class="gen-tab" onclick="changeGen(494, 649, 'Gen 5', this)">5</button>
+            <button class="gen-tab" onclick="changeGen(650, 721, 'Gen 6', this)">6</button>
+            <button class="gen-tab" onclick="changeGen(722, 809, 'Gen 7', this)">7</button>
+            <button class="gen-tab" onclick="changeGen(810, 905, 'Gen 8', this)">8</button>
+            <button class="gen-tab" onclick="changeGen(906, 1025, 'Gen 9', this)">9</button>
+        </div>
+        <main id="pokemon-grid"></main>
     </section>
 
-    <div id="summon-overlay" class="hidden">
-        <div class="loader-wrap">
-            <div class="poke-ball-loader"></div>
-            <p>Summoning...</p>
-        </div>
-    </div>
+    <div id="summon-overlay" class="hidden"><div class="poke-ball-loader"></div></div>
 
     <div id="detail-modal" class="modal">
         <div class="modal-card">
-            <button id="close-modal">&times;</button>
+            <button id="close-modal" onclick="closeM()">&times;</button>
             <h2 id="detail-name"></h2>
-            <div class="detail-img-box">
-                <img id="detail-image" src="" alt="">
-            </div>
+            <img id="detail-image" src="" style="height:150px">
             <div id="detail-info">
-                <p>#<span id="detail-id"></span> | <span id="detail-type"></span></p>
-                <div class="stat-grid">
-                    <div>HP: <span id="stat-hp"></span></div>
-                    <div>ATK: <span id="stat-attack"></span></div>
-                    <div>DEF: <span id="stat-defense"></span></div>
-                </div>
-                <div class="evo-path">
-                    <h4>Evolution Family</h4>
-                    <div id="evolution-chain"></div>
-                </div>
+                <p id="detail-type-display"></p>
+                <div id="evolution-chain"></div>
             </div>
         </div>
     </div>

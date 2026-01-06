@@ -1,82 +1,81 @@
 :root {
-    --primary: #2c3e50;
-    --secondary: #3498db;
-    --bg: #f0f7ff;
-    --card-bg: #ffffff;
+    --accent: #3498db;
+    --bg: #f5f8fd;
+    --card: #ffffff;
+    --text: #2c3e50;
+    --gold: #f1c40f;
 }
 
-body { font-family: 'Lexend', sans-serif; background: var(--bg); margin: 0; color: #334e68; }
+body { font-family: 'Lexend', sans-serif; background: var(--bg); color: var(--text); margin: 0; }
 
-header { background: var(--primary); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; color: white; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-nav ul { list-style: none; display: flex; gap: 20px; }
-nav a { color: #bcccdc; text-decoration: none; font-weight: bold; }
-nav a.active { color: white; border-bottom: 3px solid var(--secondary); }
+header { background: #2c3e50; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; color: white; position: sticky; top: 0; z-index: 1000; }
+nav ul { list-style: none; display: flex; gap: 20px; margin: 0; }
+nav a { color: #bdc3c7; text-decoration: none; font-weight: bold; font-size: 0.9rem; transition: 0.3s; }
+nav a.active, nav a:hover { color: white; }
 
 .page-section { display: none; padding: 40px 5%; text-align: center; }
-.page-section.active { display: block; animation: fadeIn 0.5s; }
+.page-section.active { display: block; animation: slideUp 0.4s ease-out; }
 
-.character-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; margin-top: 30px; }
+/* Character Cards UI */
+.character-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; margin-top: 40px; }
 .char-card { 
-    background: var(--card-bg); width: 260px; padding: 25px; border-radius: 35px; 
-    box-shadow: 0 15px 35px rgba(52, 152, 219, 0.1); border: 4px solid #fff;
-    transition: 0.3s;
+    background: var(--card); width: 280px; border-radius: 30px; overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-bottom: 8px solid #ddd;
+    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-.char-card:hover { transform: translateY(-10px); }
+.char-card:hover { transform: scale(1.05); }
 
-.avatar-box { height: 160px; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px; }
-.trainer-badge { 
-    width: 100px; height: 100px; background: #eef2f7; border-radius: 50%; 
-    border: 4px solid #ddd; overflow: hidden; box-shadow: inset 0 0 15px rgba(0,0,0,0.05);
-}
+.avatar-box { height: 180px; position: relative; display: flex; align-items: center; justify-content: center; background: #f8f9fa; }
+.trainer-ring { width: 110px; height: 110px; border-radius: 50%; border: 4px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.1); overflow: hidden; background: white; }
 .trainer-pic { width: 100%; height: 100%; object-fit: cover; }
-.pkmn-buddy { height: 80px; filter: drop-shadow(3px 5px 8px rgba(0,0,0,0.2)); }
+.pkmn-buddy { height: 85px; position: absolute; bottom: 10px; right: 20px; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2)); }
 
-.dez { border-color: #f1c40f; } .izzy { border-color: #9b59b6; } .wes { border-color: #e67e22; } .simeon { border-color: #2ecc71; } .ezra { border-color: #3498db; }
+.dez { border-color: var(--gold); } .izzy { border-color: #9b59b6; } .wes { border-color: #e67e22; } .simeon { border-color: #2ecc71; } .ezra { border-color: #3498db; }
 
-.anim-smart { animation: float 3s infinite ease-in-out; }
-.anim-beauty { animation: float 4s infinite ease-in-out; }
-.anim-energy { animation: shake 0.5s infinite; }
-.anim-chill { animation: float 6s infinite ease-in-out; }
-.anim-cute { animation: bounce 1s infinite alternate; }
+.char-info { padding: 20px; }
+.char-info h3 { margin: 0 0 10px; color: var(--text); }
+.char-info p { font-size: 0.85rem; line-height: 1.5; color: #7f8c8d; }
 
-@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-@keyframes shake { 0% { transform: rotate(1deg); } 50% { transform: rotate(-1deg); } }
-@keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-12px); } }
-
-#game-container { max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 35px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
-#game-image { height: 180px; filter: brightness(0); transition: 0.5s; }
+/* Game & Leaderboard UI */
+#game-container { max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.1); }
+#game-image { height: 180px; filter: brightness(0); transition: 0.4s; }
 #game-image.revealed { filter: brightness(1); }
-#game-options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-#game-options button { padding: 12px; border: 2px solid #f0f0f0; border-radius: 15px; background: #fff; font-weight: bold; cursor: pointer; transition: 0.2s; }
-#game-options button:hover { background: var(--secondary); color: white; border-color: var(--secondary); }
+#game-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 25px; }
+#game-options button { padding: 12px; border: 2px solid #eee; border-radius: 15px; background: white; font-weight: bold; cursor: pointer; transition: 0.2s; }
+#game-options button:hover { background: var(--accent); color: white; }
 
-#leaderboard-container { margin: 40px auto; max-width: 500px; background: white; padding: 25px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+#leaderboard-container { margin: 40px auto; max-width: 500px; background: #fff; border-radius: 30px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
 #leaderboard-table { width: 100%; border-collapse: collapse; }
-#leaderboard-table th { text-align: left; padding: 10px; border-bottom: 2px solid #eee; }
-#leaderboard-table td { padding: 12px 10px; border-bottom: 1px solid #f9f9f9; font-weight: bold; }
+#leaderboard-table th { font-size: 0.75rem; color: #95a5a6; padding-bottom: 15px; }
+#leaderboard-table td { padding: 12px; font-weight: 700; border-top: 1px solid #f5f5f5; }
+#leaderboard-body tr:first-child { color: var(--gold); font-size: 1.2rem; }
 
-.search-wrap { margin: 25px auto; display: flex; gap: 12px; justify-content: center; }
-#pkmn-search, #type-filter { padding: 12px 20px; border-radius: 25px; border: 2px solid #ddd; outline: none; }
-.search-btn { background: var(--primary); color: white; border: none; padding: 0 25px; border-radius: 25px; cursor: pointer; font-weight: bold; }
+/* Pokedex UI */
+.pokedex-container { max-width: 1000px; margin: 0 auto; }
+.controls { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; }
+#pkmn-search, #type-filter { padding: 12px 20px; border-radius: 50px; border: 2px solid #ddd; outline: none; }
+.search-btn { background: #2c3e50; color: white; border: none; padding: 0 30px; border-radius: 50px; cursor: pointer; font-weight: bold; }
+
+.gen-tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 30px; }
+.gen-tab { padding: 8px 20px; border-radius: 12px; border: 1px solid #ddd; background: white; cursor: pointer; font-weight: bold; transition: 0.2s; }
+.gen-tab.active { background: var(--accent); color: white; border-color: var(--accent); }
 
 #pokemon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
-.pokemon-card { background: white; padding: 20px; border-radius: 25px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); cursor: pointer; transition: 0.3s; }
-.pokemon-card:hover { transform: translateY(-8px); box-shadow: 0 12px 25px rgba(0,0,0,0.1); }
-.pokemon-card img { height: 100px; }
+.pokemon-card { background: white; padding: 20px; border-radius: 25px; box-shadow: 0 8px 20px rgba(0,0,0,0.04); cursor: pointer; transition: 0.3s; }
+.pokemon-card:hover { transform: translateY(-8px); box-shadow: 0 12px 30px rgba(0,0,0,0.08); }
+.pokemon-card img { height: 110px; }
 
-.gen-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 20px 0; }
-.gen-btn { padding: 8px 18px; border-radius: 12px; border: 1px solid #ddd; background: white; cursor: pointer; font-weight: bold; transition: 0.2s; }
-.gen-btn.active { background: var(--secondary); color: white; border-color: var(--secondary); }
+/* Loader & Modal */
+.poke-ball-loader { width: 80px; height: 80px; border: 5px solid #000; border-radius: 50%; background: linear-gradient(to bottom, #ff5252 50%, #fff 50%); position: relative; animation: roll 1s infinite linear; }
+.modal-card { background: white; padding: 40px; border-radius: 40px; width: 90%; max-width: 400px; position: relative; text-align: center; box-shadow: 0 30px 100px rgba(0,0,0,0.3); }
+#close-modal { position: absolute; top: 25px; right: 25px; border: none; background: none; font-size: 32px; cursor: pointer; color: #ccc; }
 
-#summon-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 5000; display: flex; justify-content: center; align-items: center; }
-#summon-overlay.hidden { display: none; }
-.summon-ball { width: 90px; height: 90px; background: radial-gradient(circle at 35% 35%, #fff 5%, #ff5252 20%, #b30000 80%); border-radius: 50%; border: 5px solid #000; position: relative; }
-.animate-summon .summon-ball { animation: shakeBall 0.8s forwards; }
+.anim-float { animation: float 3s infinite ease-in-out; }
+.anim-shake { animation: shake 0.4s infinite; }
+.anim-bounce { animation: bounce 1s infinite alternate; }
 
-.modal { display: none; position: fixed; z-index: 6000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; }
-.modal.active { display: flex; animation: fadeIn 0.3s; }
-.modal-content { background: white; padding: 40px; border-radius: 35px; width: 85%; max-width: 400px; position: relative; text-align: center; max-height: 90vh; overflow-y: auto; }
-#close-modal { position: absolute; top: 20px; right: 20px; border: none; background: none; font-size: 28px; cursor: pointer; }
-
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes shakeBall { 0% { transform: scale(0); } 50% { transform: rotate(20deg) scale(1.2); } 100% { transform: rotate(-20deg) scale(1); } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+@keyframes shake { 0%, 100% { transform: rotate(1deg); } 50% { transform: rotate(-1deg); } }
+@keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-15px); } }
+@keyframes roll { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }

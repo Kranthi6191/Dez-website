@@ -9,8 +9,7 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 let trainerName = localStorage.getItem('trainerName') || null;
-let score = 0; let pokemonNameList = []; let isShiny = false;
-let currentMode = 'guess';
+let score = 0; let pokemonNameList = []; isShiny = false; let currentMode = 'guess';
 
 const typeWeaknesses = {
     normal: ['fighting'], fire: ['water', 'ground', 'rock'], water: ['electric', 'grass'],
@@ -39,9 +38,9 @@ document.querySelectorAll('.nav-link').forEach(link => {
 
 function checkTrainerName() {
     if (!trainerName) {
-        trainerName = prompt("Welcome Wright Elite! Enter your name to compete:");
+        trainerName = prompt("Welcome Elite Trainer! Enter your name:");
         if (trainerName) localStorage.setItem('trainerName', trainerName);
-        else trainerName = "Guest Trainer";
+        else trainerName = "Guest";
     }
 }
 
@@ -68,11 +67,11 @@ async function initGame() {
     
     img.src = isShiny ? pkmn.sprites.other['official-artwork'].front_shiny : pkmn.sprites.other['official-artwork'].front_default;
     if (isShiny) { img.classList.add('shiny'); document.getElementById('shiny-alert').classList.remove('hidden'); }
-    if (currentMode === 'type') img.classList.add('revealed');
 
     options.innerHTML = '';
     let correct = currentMode === 'guess' ? correctName : pkmn.types[0].type.name;
-    let pool = currentMode === 'guess' ? pokemonNameList : ['fire','water','grass','electric','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy','normal'];
+    const typesPool = ['fire','water','grass','electric','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy','normal'];
+    let pool = currentMode === 'guess' ? pokemonNameList : typesPool;
 
     let choices = [correct];
     while(choices.length < 4) {
@@ -137,36 +136,31 @@ async function getEvolutionChain(pkmn) {
             const pkmnId = curr.species.url.split('/').slice(-2, -1)[0];
             const img = document.createElement('img');
             img.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pkmnId}.png`;
-            img.style.width = "40px";
+            img.style.width = "45px";
             img.onclick = async () => { const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pkmnId}`); summonPokemon(await res.json()); };
             evoContainer.appendChild(img);
             curr = curr.evolves_to[0];
             if (curr) evoContainer.innerHTML += ' <span>→</span> ';
         }
-    } catch { evoContainer.innerHTML = 'None family'; }
+    } catch { evoContainer.innerHTML = 'None'; }
 }
 
 async function changeGen(s, e, title, btn) {
     document.querySelectorAll('.gen-tab').forEach(b => b.classList.remove('active')); btn.classList.add('active');
     const grid = document.getElementById('pokemon-grid');
-    grid.innerHTML = '<p>Loading tall grass...</p>';
-    // SMART LOADING: Load names/basic IDs first
-    try {
-        const res = await fetch(`https://pokeapi.co/api/v2/pokemon?offset=${s-1}&limit=${(e-s)+1}`);
-        const data = await res.json();
-        grid.innerHTML = '';
-        data.results.forEach((p, idx) => {
-            const realId = s + idx;
-            const card = document.createElement('div');
-            card.className = 'pokemon-card';
-            card.innerHTML = `<img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${realId}.png" loading="lazy"><h3>${p.name.toUpperCase()}</h3>`;
-            card.onclick = async () => { 
-                const dRes = await fetch(`https://pokeapi.co/api/v2/pokemon/${realId}`);
-                summonPokemon(await dRes.json());
-            };
-            grid.appendChild(card);
-        });
-    } catch { grid.innerHTML = 'Tall grass is too thick! Refresh.'; }
+    grid.innerHTML = '<p>Searching tall grass...</p>';
+    // Promises ensure we get all data (including stats) before rendering
+    const promises = [];
+    for (let i = s; i <= e; i++) promises.push(fetch(`https://pokeapi.co/api/v2/pokemon/${i}`).then(res => res.json()));
+    const list = await Promise.all(promises);
+    grid.innerHTML = '';
+    list.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'pokemon-card';
+        card.innerHTML = `<img src="${p.sprites.front_default}"><h3>${p.name.toUpperCase()}</h3>`;
+        card.onclick = () => { summonPokemon(p); };
+        grid.appendChild(card);
+    });
 }
 
 function loadLog() {

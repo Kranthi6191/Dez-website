@@ -10,9 +10,6 @@ const db = firebase.database();
 
 let currentScore = 0; let pokemonNameList = []; isShiny = false; let currentMode = 'guess';
 
-// FIX: Global definition for Type Master
-const typesPool = ['fire','water','grass','electric','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy','normal'];
-
 const typeWeaknesses = {
     normal: ['fighting'], fire: ['water', 'ground', 'rock'], water: ['electric', 'grass'],
     grass: ['fire', 'ice', 'poison', 'flying', 'bug'], electric: ['ground'],
@@ -60,6 +57,7 @@ async function initGame() {
 
     options.innerHTML = '';
     let correct = currentMode === 'guess' ? correctName : pkmn.types[0].type.name;
+    const typesPool = ['fire','water','grass','electric','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy','normal'];
     let pool = currentMode === 'guess' ? pokemonNameList : typesPool;
 
     let choices = [correct];
@@ -125,6 +123,33 @@ async function openModal(pkmn) {
     document.getElementById('stat-attack').textContent = pkmn.stats[1].base_stat;
     document.getElementById('stat-defense').textContent = pkmn.stats[2].base_stat;
     document.getElementById('detail-modal').style.display = 'flex';
+    // FIXED: evolution family restoration
+    getEvolutionChain(pkmn);
+}
+
+async function getEvolutionChain(pkmn) {
+    const evoContainer = document.getElementById('evolution-chain');
+    evoContainer.innerHTML = 'Searching grass...';
+    try {
+        const speciesRes = await fetch(pkmn.species.url);
+        const speciesData = await speciesRes.json();
+        const evoRes = await fetch(speciesData.evolution_chain.url);
+        const evoData = await evoRes.json();
+        evoContainer.innerHTML = '';
+        let curr = evoData.chain;
+        while (curr) {
+            const pkmnId = curr.species.url.split('/').slice(-2, -1)[0];
+            const img = document.createElement('img');
+            img.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pkmnId}.png`;
+            img.onclick = async () => { 
+                const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pkmnId}`); 
+                summonPokemon(await res.json()); 
+            };
+            evoContainer.appendChild(img);
+            curr = curr.evolves_to[0];
+            if (curr) evoContainer.innerHTML += ' <span>→</span> ';
+        }
+    } catch { evoContainer.innerHTML = 'None'; }
 }
 
 async function changeGen(s, e, title, btn) {

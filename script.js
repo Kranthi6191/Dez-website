@@ -1,4 +1,3 @@
-// Replace with your actual Firebase config from the console
 const firebaseConfig = {
   apiKey: "AIzaSyAg5xZeGOUIaaOSJ7_Okn-Y5nEjdUsjwWU",
   authDomain: "wright-trainers.firebaseapp.com",
@@ -11,30 +10,42 @@ const db = firebase.database();
 
 let trainerName = localStorage.getItem('trainerName') || null;
 let currentMode = 'guess'; 
-let score = 0; let pokemonNameList = []; let currentGenList = []; let isShiny = false;
+let score = 0; let pokemonNameList = []; let isShiny = false;
 const typesPool = ['fire','water','grass','electric','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy','normal'];
 
+// 1. Navigation Logic Fix
+function switchPage(targetId) {
+    document.querySelectorAll('.page-section').forEach(section => section.classList.remove('active'));
+    document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+
+    const targetSection = document.getElementById(targetId);
+    const targetLink = document.querySelector(`[data-target="${targetId}"]`);
+
+    if (targetSection) targetSection.classList.add('active');
+    if (targetLink) targetLink.classList.add('active');
+}
+
+document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        switchPage(this.getAttribute('data-target'));
+    });
+});
+
+// 2. Trainer Identity
 function checkTrainerName() {
     if (!trainerName) {
         trainerName = prompt("Welcome, Elite Trainer! Enter your name to compete:");
-        if (trainerName) {
-            localStorage.setItem('trainerName', trainerName);
-        } else {
-            trainerName = "Guest Trainer";
-        }
+        if (trainerName) localStorage.setItem('trainerName', trainerName);
+        else trainerName = "Guest Trainer";
     }
 }
 
+// 3. Theme & Game Logic
 function toggleTheme() {
-    const body = document.body;
+    document.body.classList.toggle('night-mode');
     const btn = document.getElementById('theme-toggle');
-    if (body.classList.contains('light-mode')) {
-        body.classList.replace('light-mode', 'night-mode');
-        btn.textContent = "☀️ Day Mode";
-    } else {
-        body.classList.replace('night-mode', 'light-mode');
-        btn.textContent = "🌙 Night Mode";
-    }
+    btn.textContent = document.body.classList.contains('night-mode') ? "☀️ Day Mode" : "🌙 Night Mode";
 }
 
 function switchGame(mode) {
@@ -83,8 +94,9 @@ async function initGame() {
                 score += isShiny ? 5 : 1;
                 document.getElementById('game-feedback').textContent = "AWESOME!";
             } else {
-                addToLog(correct.toUpperCase(), score);
-                checkHigh(score); score = 0;
+                db.ref('combatLog').push({ trainer: trainerName, pokemon: correct.toUpperCase(), streak: score, time: Date.now() });
+                if (score > 0) db.ref('leaderboard').push({ name: trainerName, score: score });
+                score = 0;
                 document.getElementById('game-feedback').textContent = `IT WAS ${correct.toUpperCase()}!`;
             }
             document.getElementById('current-score').textContent = score;
@@ -92,10 +104,6 @@ async function initGame() {
         };
         options.appendChild(btn);
     });
-}
-
-function addToLog(name, finalStreak) {
-    db.ref('combatLog').push({ pokemon: name, streak: finalStreak, trainer: trainerName, time: Date.now() });
 }
 
 function loadLog() {
@@ -110,12 +118,6 @@ function loadLog() {
     });
 }
 
-function checkHigh(s) {
-    if (s > 0) {
-        db.ref('leaderboard').push({ name: trainerName, score: s });
-    }
-}
-
 function loadLB() {
     db.ref('leaderboard').orderByChild('score').on('value', snap => {
         const lb = document.getElementById('leaderboard-body');
@@ -128,35 +130,24 @@ function loadLB() {
     });
 }
 
-function switchPage(t) {
-    document.querySelectorAll('.nav-link, .page-section').forEach(el => el.classList.remove('active'));
-    document.getElementById(t).classList.add('active');
-    document.querySelector(`[data-target="${t}"]`).classList.add('active');
-}
-
 async function changeGen(s, e, title, btn) {
     document.querySelectorAll('.gen-tab').forEach(b => b.classList.remove('active')); btn.classList.add('active');
     const grid = document.getElementById('pokemon-grid');
     grid.innerHTML = '<p>Searching grass...</p>';
     const promises = [];
     for (let i = s; i <= e; i++) promises.push(fetch(`https://pokeapi.co/api/v2/pokemon/${i}`).then(res => res.json()));
-    currentGenList = await Promise.all(promises);
+    const list = await Promise.all(promises);
     grid.innerHTML = '';
-    currentGenList.forEach(p => {
+    list.forEach(p => {
         const card = document.createElement('div');
         card.className = 'pokemon-card';
         card.innerHTML = `<img src="${p.sprites.front_default}"><h3>${p.name.toUpperCase()}</h3>`;
-        card.onclick = () => { 
-            document.getElementById('detail-modal').style.display='flex'; 
-            document.getElementById('detail-name').textContent=p.name.toUpperCase(); 
-            document.getElementById('detail-image').src=p.sprites.other['official-artwork'].front_default; 
-        };
+        card.onclick = () => { document.getElementById('detail-modal').style.display='flex'; document.getElementById('detail-name').textContent=p.name.toUpperCase(); document.getElementById('detail-image').src=p.sprites.other['official-artwork'].front_default; };
         grid.appendChild(card);
     });
 }
 
 function closeM() { document.getElementById('detail-modal').style.display='none'; }
-
 checkTrainerName();
 changeGen(1, 151, 'Gen 1', document.querySelector('.gen-tab')); 
 initGame(); 

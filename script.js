@@ -1,4 +1,3 @@
-// REPLACE WITH YOUR FIREBASE CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyAg5xZeGOUIaaOSJ7_Okn-Y5nEjdUsjwWU",
   authDomain: "wright-trainers.firebaseapp.com",
@@ -18,21 +17,10 @@ const modal = document.getElementById('detail-modal');
 const closeModal = document.getElementById('close-modal');
 const summonOverlay = document.getElementById('summon-overlay');
 const TOTAL_POKEMON = 1025;
+
 let score = 0; let best = 0;
 let pokemonNameList = [];
 let currentGenList = [];
-
-const typeWeaknesses = {
-    normal: ['fighting'], fire: ['water', 'ground', 'rock'], water: ['electric', 'grass'],
-    grass: ['fire', 'ice', 'poison', 'flying', 'bug'], electric: ['ground'],
-    ice: ['fire', 'fighting', 'rock', 'steel'], fighting: ['flying', 'psychic', 'fairy'],
-    poison: ['ground', 'psychic'], ground: ['water', 'grass', 'ice'],
-    flying: ['electric', 'ice', 'rock'], psychic: ['bug', 'ghost', 'dark'],
-    bug: ['fire', 'flying', 'rock'], rock: ['water', 'grass', 'fighting', 'ground', 'steel'],
-    ghost: ['ghost', 'dark'], dragon: ['ice', 'dragon', 'fairy'],
-    dark: ['fighting', 'bug', 'fairy'], steel: ['fire', 'fighting', 'ground'],
-    fairy: ['poison', 'steel']
-};
 
 function switchPage(targetId) {
     document.querySelectorAll('.nav-link, .page-section').forEach(el => el.classList.remove('active'));
@@ -47,10 +35,10 @@ document.querySelectorAll('.nav-link').forEach(link => {
 
 async function changeGen(start, end, title, btn) {
     document.getElementById('pokedex-title').textContent = title;
-    document.querySelectorAll('.gen-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.gen-tab').forEach(b => b.classList.remove('active'));
     if(btn) btn.classList.add('active');
     document.getElementById('type-filter').value = "all";
-    grid.innerHTML = '<p>Searching the tall grass...</p>';
+    grid.innerHTML = '<p>Searching tall grass...</p>';
     const promises = [];
     for (let i = start; i <= end; i++) {
         promises.push(fetch(`https://pokeapi.co/api/v2/pokemon/${i}`).then(res => res.json()));
@@ -72,25 +60,19 @@ function displayPokemon(list) {
 
 function filterByType() {
     const selectedType = document.getElementById('type-filter').value;
-    if (selectedType === "all") {
-        displayPokemon(currentGenList);
-    } else {
-        const filtered = currentGenList.filter(pkmn => pkmn.types.some(t => t.type.name === selectedType));
-        displayPokemon(filtered);
-    }
+    if (selectedType === "all") displayPokemon(currentGenList);
+    else displayPokemon(currentGenList.filter(pkmn => pkmn.types.some(t => t.type.name === selectedType)));
 }
 
 async function handleSearch() {
     const query = document.getElementById('pkmn-search').value.toLowerCase().trim();
     if (!query) return;
-    grid.innerHTML = `<p>Searching...</p>`;
     try {
         const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${query}`);
         const pkmn = await res.json();
-        grid.innerHTML = '';
         displayPokemon([pkmn]);
         summonPokemon(pkmn);
-    } catch { grid.innerHTML = `<p style="color:red;">Not found.</p>`; }
+    } catch { alert("Pokémon not found!"); }
 }
 
 function summonPokemon(pkmn) {
@@ -107,11 +89,7 @@ async function openModal(pkmn) {
     document.getElementById('detail-name').textContent = pkmn.name.toUpperCase();
     document.getElementById('detail-image').src = pkmn.sprites.other['official-artwork'].front_default;
     document.getElementById('detail-id').textContent = pkmn.id;
-    const types = pkmn.types.map(t => t.type.name.toLowerCase());
-    document.getElementById('detail-type').textContent = types.join(', ');
-    let weaknesses = new Set();
-    types.forEach(t => { if (typeWeaknesses[t]) typeWeaknesses[t].forEach(w => weaknesses.add(w)); });
-    document.getElementById('detail-weakness').textContent = Array.from(weaknesses).join(', ') || 'None';
+    document.getElementById('detail-type').textContent = pkmn.types.map(t => t.type.name.toUpperCase()).join(', ');
     document.getElementById('stat-hp').textContent = pkmn.stats[0].base_stat;
     document.getElementById('stat-attack').textContent = pkmn.stats[1].base_stat;
     document.getElementById('stat-defense').textContent = pkmn.stats[2].base_stat;
@@ -133,7 +111,7 @@ async function getEvolutionChain(pkmn) {
             const pkmnId = curr.species.url.split('/').slice(-2, -1)[0];
             const div = document.createElement('div');
             div.className = 'evo-item';
-            div.innerHTML = `<img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pkmnId}.png">`;
+            div.innerHTML = `<img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pkmnId}.png" style="width:50px;">`;
             div.onclick = async () => {
                 const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pkmnId}`);
                 const data = await res.json();
@@ -141,7 +119,7 @@ async function getEvolutionChain(pkmn) {
             };
             evoContainer.appendChild(div);
             curr = curr.evolves_to[0];
-            if (curr) evoContainer.innerHTML += '<span style="color:#ccc">→</span>';
+            if (curr) evoContainer.innerHTML += '<span>→</span>';
         }
     } catch { evoContainer.innerHTML = 'None'; }
 }
@@ -172,15 +150,13 @@ async function initGame() {
             img.classList.add('revealed');
             if(choice === correctName) {
                 score++; 
-                document.getElementById('game-feedback').textContent = "CORRECT!";
-                if(score > best) best = score;
+                document.getElementById('game-feedback').textContent = "AWESOME!";
             } else {
                 checkHighScore(score);
                 score = 0; 
-                document.getElementById('game-feedback').textContent = `WRONG! It was ${correctName}`;
+                document.getElementById('game-feedback').textContent = `IT WAS ${correctName}!`;
             }
             document.getElementById('current-score').textContent = score;
-            document.getElementById('high-score').textContent = best;
             setTimeout(initGame, 2000);
         };
         options.appendChild(btn);
@@ -189,20 +165,33 @@ async function initGame() {
 
 function checkHighScore(finalScore) {
     if (finalScore > 0) {
-        const name = prompt("Elite Trainer Streak! Enter name for leaderboard:");
-        if (name) db.ref('leaderboard').push({ name, score: finalScore, time: Date.now() });
+        const name = prompt("TOP 5 STREAK! Enter Trainer Name:");
+        if (name) {
+            db.ref('leaderboard').push({ name, score: finalScore, time: Date.now() });
+        }
     }
 }
 
 function loadLeaderboard() {
-    db.ref('leaderboard').orderByChild('score').limitToLast(5).on('value', snap => {
+    db.ref('leaderboard').orderByChild('score').on('value', snap => {
         const lbBody = document.getElementById('leaderboard-body');
         let scores = [];
-        snap.forEach(c => scores.push(c.val()));
-        scores.reverse();
+        snap.forEach(c => {
+            scores.push({key: c.key, ...c.val()});
+        });
+        scores.sort((a,b) => b.score - a.score);
+        
+        // AUTO-DELETE Logic: Keep only top 5 in database
+        if (scores.length > 5) {
+            for (let i = 5; i < scores.length; i++) {
+                db.ref('leaderboard').child(scores[i].key).remove();
+            }
+            scores = scores.slice(0, 5);
+        }
+
         lbBody.innerHTML = '';
         scores.forEach((e, i) => {
-            lbBody.innerHTML += `<tr><td>#${i+1}</td><td>${e.name}</td><td>${e.score}</td></tr>`;
+            lbBody.innerHTML += `<tr><td>#${i+1}</td><td>${e.name.toUpperCase()}</td><td>${e.score}</td></tr>`;
         });
     });
 }

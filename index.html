@@ -45,11 +45,11 @@
 
         <div id="log-container">
             <h3>Live Activity Log</h3>
-            <ul id="combat-log"><li>Waiting for data...</li></ul>
+            <ul id="combat-log"></ul>
         </div>
         
         <div id="leaderboard-container">
-            <h3>Elite Top 5 Champions</h3>
+            <h3>Top 5 Champions</h3>
             <table id="leaderboard-table">
                 <thead><tr><th>RANK</th><th>TRAINER</th><th>STREAK</th></tr></thead>
                 <tbody id="leaderboard-body"></tbody>
@@ -83,24 +83,24 @@
             </div>
             <div class="char-card simeon">
                 <div class="avatar-box anim-float">
-                    <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=Simeon&skinColor=f9c9b6&eyes=happy" class="trainer-pic"></div>
+                    <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=Simeon&skinColor=f9c9b6" class="trainer-pic"></div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/1.gif" class="pkmn-buddy">
                 </div>
                 <div class="char-info"><h3>Trainer Simeon</h3><p>The Zen Master. Expert at maintaining a calm, relaxed vibe even in the heat of battle.</p></div>
             </div>
             <div class="char-card ezra">
                 <div class="avatar-box anim-bounce">
-                    <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=Ezra&skinColor=f9c9b6&mouth=smile" class="trainer-pic"></div>
+                    <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=Baby&skinColor=f9c9b6" class="trainer-pic"></div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/7.gif" class="pkmn-buddy">
                 </div>
-                <div class="char-info"><h3>Rookie Ezra</h3><p>The Rising Star and the cutest trainer ever. The newest member with unlimited potential.</p></div>
+                <div class="char-info"><h3>Rookie Ezra</h3><p>The Rising Star and the cutest trainer ever. Newest member with unlimited potential.</p></div>
             </div>
         </div>
     </section>
 
     <section id="pokedex" class="page-section">
         <div class="controls">
-            <input type="text" id="pkmn-search" placeholder="Search Name or ID...">
+            <input type="text" id="pkmn-search" placeholder="Name or ID...">
             <button onclick="handleSearch()" class="search-btn">Find</button>
         </div>
         <div class="gen-tabs">

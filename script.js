@@ -10,7 +10,7 @@ const db = firebase.database();
 
 let trainerName = localStorage.getItem('trainerName') || null;
 let currentMode = 'guess'; 
-let score = 0; let pokemonNameList = []; isShiny = false;
+let score = 0; let pokemonNameList = []; let isShiny = false;
 
 const typeWeaknesses = {
     normal: ['fighting'], fire: ['water', 'ground', 'rock'], water: ['electric', 'grass'],
@@ -50,15 +50,6 @@ function toggleTheme() {
     document.getElementById('theme-toggle').textContent = document.body.classList.contains('night-mode') ? "☀️ Day Mode" : "🌙 Night Mode";
 }
 
-function switchGame(mode) {
-    currentMode = mode;
-    score = 0; document.getElementById('current-score').textContent = "0";
-    document.querySelectorAll('.game-tab').forEach(b => b.classList.remove('active'));
-    event.target.classList.add('active');
-    document.getElementById('game-title').textContent = mode === 'guess' ? "Who's That Pokémon?" : "What's the Type?";
-    initGame();
-}
-
 async function initGame() {
     if (pokemonNameList.length === 0) {
         const res = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=1025`);
@@ -81,8 +72,7 @@ async function initGame() {
 
     options.innerHTML = '';
     let correct = currentMode === 'guess' ? pkmn.name.toUpperCase() : pkmn.types[0].type.name;
-    const typesPool = ['fire','water','grass','electric','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy','normal'];
-    let pool = currentMode === 'guess' ? pokemonNameList : typesPool;
+    let pool = currentMode === 'guess' ? pokemonNameList : ['fire','water','grass','electric','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy','normal'];
 
     let choices = [correct];
     while(choices.length < 4) {
@@ -98,8 +88,10 @@ async function initGame() {
                 score += isShiny ? 5 : 1;
                 document.getElementById('game-feedback').textContent = "AWESOME!";
             } else {
-                db.ref('leaderboard').push({ name: trainerName, score: score });
-                db.ref('combatLog').push({ trainer: trainerName, pokemon: correct.toUpperCase(), streak: score, time: Date.now() });
+                if (score > 0) {
+                    db.ref('leaderboard').push({ name: trainerName, score: score });
+                    db.ref('combatLog').push({ trainer: trainerName, pokemon: correct.toUpperCase(), streak: score, time: Date.now() });
+                }
                 score = 0;
                 document.getElementById('game-feedback').textContent = `IT WAS ${correct.toUpperCase()}!`;
             }
@@ -111,9 +103,8 @@ async function initGame() {
 }
 
 function summonPokemon(pkmn) {
-    const overlay = document.getElementById('summon-overlay');
-    overlay.classList.remove('hidden');
-    setTimeout(() => { overlay.classList.add('hidden'); openModal(pkmn); }, 800);
+    document.getElementById('summon-overlay').classList.remove('hidden');
+    setTimeout(() => { document.getElementById('summon-overlay').classList.add('hidden'); openModal(pkmn); }, 800);
 }
 
 async function openModal(pkmn) {
@@ -176,9 +167,10 @@ function loadLog() {
     db.ref('combatLog').limitToLast(6).on('value', snap => {
         const log = document.getElementById('combat-log');
         log.innerHTML = '';
-        let entries = [];
-        snap.forEach(c => entries.push(c.val()));
-        entries.reverse().forEach(e => { log.innerHTML += `<li>⚔️ <b>${e.trainer}</b> ended at <b>${e.pokemon}</b> (${e.streak})</li>`; });
+        snap.forEach(c => {
+            const e = c.val();
+            log.innerHTML = `<li>⚔️ <b>${e.trainer}</b> streak ended at <b>${e.pokemon}</b> (${e.streak})</li>` + log.innerHTML;
+        });
     });
 }
 
@@ -190,7 +182,9 @@ function loadLB() {
         scores.sort((a,b) => b.score - a.score);
         if (scores.length > 5) { for (let i = 5; i < scores.length; i++) db.ref('leaderboard').child(scores[i].key).remove(); scores = scores.slice(0, 5); }
         lb.innerHTML = '';
-        scores.forEach((e, i) => { lb.innerHTML += `<tr><td>#${i+1}</td><td>${e.name.toUpperCase()}</td><td>${e.score}</td></tr>`; });
+        scores.forEach((e, i) => {
+            lb.innerHTML += `<tr><td>#${i+1}</td><td>${e.name ? e.name.toUpperCase() : "TRAINER"}</td><td>${e.score}</td></tr>`;
+        });
     });
 }
 

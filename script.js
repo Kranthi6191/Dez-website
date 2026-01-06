@@ -49,6 +49,15 @@ function toggleTheme() {
     document.getElementById('theme-toggle').textContent = document.body.classList.contains('night-mode') ? "☀️ Day Mode" : "🌙 Night Mode";
 }
 
+function switchGame(mode) {
+    currentMode = mode;
+    score = 0; document.getElementById('current-score').textContent = "0";
+    document.querySelectorAll('.game-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById('game-title').textContent = mode === 'guess' ? "Who's That Pokémon?" : "What's the Type?";
+    initGame();
+}
+
 async function initGame() {
     if (pokemonNameList.length === 0) {
         const res = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=1025`);
@@ -67,6 +76,7 @@ async function initGame() {
     
     img.src = isShiny ? pkmn.sprites.other['official-artwork'].front_shiny : pkmn.sprites.other['official-artwork'].front_default;
     if (isShiny) { img.classList.add('shiny'); document.getElementById('shiny-alert').classList.remove('hidden'); }
+    if (currentMode === 'type') img.classList.add('revealed');
 
     options.innerHTML = '';
     let correct = currentMode === 'guess' ? correctName : pkmn.types[0].type.name;
@@ -149,7 +159,6 @@ async function changeGen(s, e, title, btn) {
     document.querySelectorAll('.gen-tab').forEach(b => b.classList.remove('active')); btn.classList.add('active');
     const grid = document.getElementById('pokemon-grid');
     grid.innerHTML = '<p>Searching tall grass...</p>';
-    // Promises ensure we get all data (including stats) before rendering
     const promises = [];
     for (let i = s; i <= e; i++) promises.push(fetch(`https://pokeapi.co/api/v2/pokemon/${i}`).then(res => res.json()));
     const list = await Promise.all(promises);
@@ -169,7 +178,7 @@ function loadLog() {
         log.innerHTML = '';
         snap.forEach(c => {
             const e = c.val();
-            log.innerHTML = `<li>⚔️ <b>${e.trainer ? e.trainer.toUpperCase() : "TRAINER"}</b> ended streak at <b>${e.pokemon}</b> (${e.streak})</li>` + log.innerHTML;
+            log.innerHTML = `<li>⚔️ <b>${e.trainer ? e.trainer.toUpperCase() : "TRAINER"}</b> streak ended at <b>${e.pokemon}</b> (${e.streak})</li>` + log.innerHTML;
         });
     });
 }
@@ -182,7 +191,9 @@ function loadLB() {
         scores.sort((a,b) => b.score - a.score);
         if (scores.length > 5) { for (let i = 5; i < scores.length; i++) db.ref('leaderboard').child(scores[i].key).remove(); scores = scores.slice(0, 5); }
         lb.innerHTML = '';
-        scores.forEach((e, i) => { lb.innerHTML += `<tr><td>#${i+1}</td><td>${e.name ? e.name.toUpperCase() : "TRAINER"}</td><td>${e.score}</td></tr>`; });
+        scores.forEach((e, i) => {
+            lb.innerHTML += `<tr><td>#${i+1}</td><td>${e.name ? e.name.toUpperCase() : "TRAINER"}</td><td>${e.score}</td></tr>`;
+        });
     });
 }
 

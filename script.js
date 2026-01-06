@@ -10,8 +10,8 @@ const db = firebase.database();
 
 let trainerName = localStorage.getItem('trainerName') || null;
 let currentMode = 'guess'; 
-let score = 0; let pokemonNameList = []; let isShiny = false;
-const typesPool = ['fire','water','grass','electric','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy','normal'];
+let score = 0; let pokemonNameList = []; isShiny = false;
+
 const typeWeaknesses = {
     normal: ['fighting'], fire: ['water', 'ground', 'rock'], water: ['electric', 'grass'],
     grass: ['fire', 'ice', 'poison', 'flying', 'bug'], electric: ['ground'],
@@ -39,7 +39,7 @@ document.querySelectorAll('.nav-link').forEach(link => {
 
 function checkTrainerName() {
     if (!trainerName) {
-        trainerName = prompt("Welcome to the Wright Pokedex! Enter your Trainer Name:");
+        trainerName = prompt("Welcome Elite Trainer! Enter your name:");
         if (trainerName) localStorage.setItem('trainerName', trainerName);
         else trainerName = "Guest Trainer";
     }
@@ -73,13 +73,17 @@ async function initGame() {
     isShiny = Math.random() < 0.1;
     const randomId = Math.floor(Math.random() * 1025) + 1;
     const pkmn = await fetch(`https://pokeapi.co/api/v2/pokemon/${randomId}`).then(r => r.json());
+    const correctName = pkmn.name.toUpperCase();
+    
     img.src = isShiny ? pkmn.sprites.other['official-artwork'].front_shiny : pkmn.sprites.other['official-artwork'].front_default;
     if (isShiny) { img.classList.add('shiny'); alert.classList.remove('hidden'); }
     if (currentMode === 'type') img.classList.add('revealed');
 
     options.innerHTML = '';
     let correct = currentMode === 'guess' ? pkmn.name.toUpperCase() : pkmn.types[0].type.name;
+    const typesPool = ['fire','water','grass','electric','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy','normal'];
     let pool = currentMode === 'guess' ? pokemonNameList : typesPool;
+
     let choices = [correct];
     while(choices.length < 4) {
         let rand = pool[Math.floor(Math.random() * pool.length)];
@@ -94,12 +98,10 @@ async function initGame() {
                 score += isShiny ? 5 : 1;
                 document.getElementById('game-feedback').textContent = "AWESOME!";
             } else {
-                if (score > 0) {
-                    db.ref('leaderboard').push({ name: trainerName, score: score });
-                    db.ref('combatLog').push({ trainer: trainerName, pokemon: correct.toUpperCase(), streak: score, time: Date.now() });
-                }
+                db.ref('leaderboard').push({ name: trainerName, score: score });
+                db.ref('combatLog').push({ trainer: trainerName, pokemon: correct.toUpperCase(), streak: score, time: Date.now() });
                 score = 0;
-                document.getElementById('game-feedback').textContent = `WRONG! IT WAS ${correct.toUpperCase()}!`;
+                document.getElementById('game-feedback').textContent = `IT WAS ${correct.toUpperCase()}!`;
             }
             document.getElementById('current-score').textContent = score;
             setTimeout(initGame, 2000);
@@ -144,6 +146,7 @@ async function getEvolutionChain(pkmn) {
             const pkmnId = curr.species.url.split('/').slice(-2, -1)[0];
             const img = document.createElement('img');
             img.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pkmnId}.png`;
+            img.style.width = "40px";
             img.onclick = async () => { const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pkmnId}`); summonPokemon(await res.json()); };
             evoContainer.appendChild(img);
             curr = curr.evolves_to[0];
@@ -170,12 +173,12 @@ async function changeGen(s, e, title, btn) {
 }
 
 function loadLog() {
-    db.ref('combatLog').limitToLast(5).on('value', snap => {
+    db.ref('combatLog').limitToLast(6).on('value', snap => {
         const log = document.getElementById('combat-log');
         log.innerHTML = '';
         let entries = [];
         snap.forEach(c => entries.push(c.val()));
-        entries.reverse().forEach(e => { log.innerHTML += `<li>⚔️ <b>${e.trainer}</b> streak ended at <b>${e.pokemon}</b> (${e.streak})</li>`; });
+        entries.reverse().forEach(e => { log.innerHTML += `<li>⚔️ <b>${e.trainer}</b> ended at <b>${e.pokemon}</b> (${e.streak})</li>`; });
     });
 }
 

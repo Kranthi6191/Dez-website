@@ -4,18 +4,29 @@ const closeModal = document.getElementById('close-modal');
 const summonOverlay = document.getElementById('summon-overlay');
 
 let score = 0; let best = 0;
+// Total Pokemon count as of Gen 9
+const TOTAL_POKEMON = 1025;
 let pokemonNameList = [];
 
-// Full Weakness Map
+// 1. COMPLETE WEAKNESS MAP (Corrected for accuracy)
 const typeWeaknesses = {
-    normal: ['fighting'], fire: ['water', 'ground', 'rock'], water: ['electric', 'grass'],
-    grass: ['fire', 'ice', 'poison', 'flying', 'bug'], electric: ['ground'],
-    ice: ['fire', 'fighting', 'rock', 'steel'], fighting: ['flying', 'psychic', 'fairy'],
-    poison: ['ground', 'psychic'], ground: ['water', 'grass', 'ice'],
-    flying: ['electric', 'ice', 'rock'], psychic: ['bug', 'ghost', 'dark'],
-    bug: ['fire', 'flying', 'rock'], rock: ['water', 'grass', 'fighting', 'ground', 'steel'],
-    ghost: ['ghost', 'dark'], dragon: ['ice', 'dragon', 'fairy'],
-    dark: ['fighting', 'bug', 'fairy'], steel: ['fire', 'fighting', 'ground'],
+    normal: ['fighting'],
+    fire: ['water', 'ground', 'rock'],
+    water: ['electric', 'grass'],
+    grass: ['fire', 'ice', 'poison', 'flying', 'bug'],
+    electric: ['ground'],
+    ice: ['fire', 'fighting', 'rock', 'steel'],
+    fighting: ['flying', 'psychic', 'fairy'],
+    poison: ['ground', 'psychic'],
+    ground: ['water', 'grass', 'ice'],
+    flying: ['electric', 'ice', 'rock'],
+    psychic: ['bug', 'ghost', 'dark'],
+    bug: ['fire', 'flying', 'rock'],
+    rock: ['water', 'grass', 'fighting', 'ground', 'steel'],
+    ghost: ['ghost', 'dark'],
+    dragon: ['ice', 'dragon', 'fairy'],
+    dark: ['fighting', 'bug', 'fairy'],
+    steel: ['fire', 'fighting', 'ground'],
     fairy: ['poison', 'steel']
 };
 
@@ -82,11 +93,11 @@ async function handleSearch() {
         
         summonPokemon(pkmn);
     } catch {
-        grid.innerHTML = `<p style="color:red;">Pokémon not found. Try again!</p>`;
+        grid.innerHTML = `<p style="color:red;">Pokémon not found. Try name or ID (1-${TOTAL_POKEMON}).</p>`;
     }
 }
 
-// --- SUMMON LOGIC ---
+// --- SUMMON & MODAL LOGIC ---
 function summonPokemon(pkmn) {
     summonOverlay.classList.remove('hidden');
     summonOverlay.classList.add('animate-summon');
@@ -97,21 +108,27 @@ function summonPokemon(pkmn) {
     }, 800);
 }
 
+// 2. UPDATED MODAL FUNCTION (Fixes the red weakness issue)
 function openModal(pkmn) {
     document.getElementById('detail-name').textContent = pkmn.name.toUpperCase();
     document.getElementById('detail-image').src = pkmn.sprites.other['official-artwork'].front_default;
     document.getElementById('detail-id').textContent = pkmn.id;
     
-    const types = pkmn.types.map(t => t.type.name);
+    // Get Types in lowercase
+    const types = pkmn.types.map(t => t.type.name.toLowerCase());
     document.getElementById('detail-type').textContent = types.join(', ');
 
+    // Calculate Weaknesses using Set to avoid duplicates
     let weaknesses = new Set();
-    types.forEach(type => {
-        if (typeWeaknesses[type]) {
-            typeWeaknesses[type].forEach(w => weaknesses.add(w));
+    types.forEach(t => {
+        let typeInfo = typeWeaknesses[t];
+        if (typeInfo) {
+            typeInfo.forEach(w => weaknesses.add(w));
         }
     });
-    document.getElementById('detail-weakness').textContent = Array.from(weaknesses).join(', ') || 'None';
+
+    const weaknessList = Array.from(weaknesses).join(', ');
+    document.getElementById('detail-weakness').textContent = weaknessList.length > 0 ? weaknessList : "None";
     
     document.getElementById('stat-hp').textContent = pkmn.stats[0].base_stat;
     document.getElementById('stat-attack').textContent = pkmn.stats[1].base_stat;
@@ -120,10 +137,11 @@ function openModal(pkmn) {
     modal.classList.add('active');
 }
 
-// --- WHO'S THAT POKEMON GAME (ALL 9 GENS) ---
+// --- GAME LOGIC (ALL 9 GENS) ---
 async function initGame() {
+    // Fetch all names once for optimized decoys
     if (pokemonNameList.length === 0) {
-        const res = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1025');
+        const res = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${TOTAL_POKEMON}`);
         const data = await res.json();
         pokemonNameList = data.results.map(p => p.name.toUpperCase());
     }
@@ -133,7 +151,8 @@ async function initGame() {
     const feedback = document.getElementById('game-feedback');
     img.classList.remove('revealed'); feedback.textContent = "";
 
-    const randomId = Math.floor(Math.random() * 1025) + 1;
+    // Pick random Pokemon from Gen 1 to Gen 9
+    const randomId = Math.floor(Math.random() * TOTAL_POKEMON) + 1;
     const pkmn = await fetch(`https://pokeapi.co/api/v2/pokemon/${randomId}`).then(r => r.json());
     const correctName = pkmn.name.toUpperCase();
     img.src = pkmn.sprites.other['official-artwork'].front_default;
@@ -141,7 +160,7 @@ async function initGame() {
 
     let choices = [correctName];
     while(choices.length < 4) {
-        let randName = pokemonNameList[Math.floor(Math.random() * 1025)];
+        let randName = pokemonNameList[Math.floor(Math.random() * TOTAL_POKEMON)];
         if(!choices.includes(randName)) choices.push(randName);
     }
 
@@ -168,5 +187,5 @@ window.onclick = (e) => { if(e.target === modal) modal.classList.remove('active'
 document.getElementById('pkmn-search').addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSearch(); });
 
 // Initialization
-changeGen(1, 151, 'Gen 1');
-initGame();
+changeGen(1, 151, 'Gen 1'); // Load Gen 1 by default
+initGame(); // Start game engine

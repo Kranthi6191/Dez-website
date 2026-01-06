@@ -1,24 +1,36 @@
-name: Deploy to InfinityFree
+name: Deploy Pokémon Site to InfinityFree
 
 on:
   push:
     branches:
-      - main  # Make sure your branch is named 'main'
+      - main  # Deploys when you push to main branch
 
 jobs:
-  web-deploy:
-    name: 🚀 Deploy
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: 🚚 Checkout latest code
+      - name: Checkout latest code
         uses: actions/checkout@v3
 
-      - name: 📂 Deploy via FTP
+      - name: Validate secrets
+        run: |
+          if [ -z "${{ secrets.FTP_SERVER }}" ]; then
+            echo "ERROR: FTP_SERVER secret is missing!" && exit 1
+          fi
+          if [ -z "${{ secrets.FTP_USERNAME }}" ]; then
+            echo "ERROR: FTP_USERNAME secret is missing!" && exit 1
+          fi
+          if [ -z "${{ secrets.FTP_PASSWORD }}" ]; then
+            echo "ERROR: FTP_PASSWORD secret is missing!" && exit 1
+          fi
+
+      - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./           # change if your HTML/CSS/JS is in a subfolder
-          server-dir: htdocs/
-          dry-run: false
+          local-dir: ./         # root of your repo (change if needed)
+          server-dir: /htdocs/  # InfinityFree default folder
+          dry-run:

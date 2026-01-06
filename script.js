@@ -1,7 +1,8 @@
+// REPLACE WITH YOUR FIREBASE CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyAg5xZeGOUIaaOSJ7_Okn-Y5nEjdUsjwWU",
   authDomain: "wright-trainers.firebaseapp.com",
-  databaseURL: "https://wright-trainers-default-rtdb.firebaseio.com/", // Check this in your Firebase console
+  databaseURL: "https://wright-trainers-default-rtdb.firebaseio.com/",
   projectId: "wright-trainers",
   storageBucket: "wright-trainers.firebasestorage.app",
   messagingSenderId: "935622740076",
@@ -17,9 +18,7 @@ const modal = document.getElementById('detail-modal');
 const closeModal = document.getElementById('close-modal');
 const summonOverlay = document.getElementById('summon-overlay');
 const TOTAL_POKEMON = 1025;
-
-let score = 0; 
-let best = 0;
+let score = 0; let best = 0;
 let pokemonNameList = [];
 let currentGenList = [];
 
@@ -142,12 +141,7 @@ async function getEvolutionChain(pkmn) {
             };
             evoContainer.appendChild(div);
             curr = curr.evolves_to[0];
-            if (curr) {
-                const arrow = document.createElement('span');
-                arrow.style.color = '#ccc';
-                arrow.textContent = '→';
-                evoContainer.appendChild(arrow);
-            }
+            if (curr) evoContainer.innerHTML += '<span style="color:#ccc">→</span>';
         }
     } catch { evoContainer.innerHTML = 'None'; }
 }

@@ -33,7 +33,7 @@
         </div>
 
         <div id="game-container">
-            <div class="score-board">STREAK: <span id="current-score">0</span> | BEST: <span id="high-score">0</span></div>
+            <div class="score-board">STREAK: <span id="current-score">0</span></div>
             <h2 id="shiny-alert" class="hidden">✨ SHINY POKEMON! ✨</h2>
             <h2 id="game-title">Who's That Pokémon?</h2>
             <div class="game-box">
@@ -42,9 +42,14 @@
                 <p id="game-feedback"></p>
             </div>
         </div>
+
+        <div id="log-container">
+            <h3>Live Squad Activity</h3>
+            <ul id="combat-log"></ul>
+        </div>
         
         <div id="leaderboard-container">
-            <h3>Top 5 Elite Champions</h3>
+            <h3>Elite Top 5 Champions</h3>
             <table id="leaderboard-table">
                 <thead><tr><th>RANK</th><th>TRAINER</th><th>STREAK</th></tr></thead>
                 <tbody id="leaderboard-body"></tbody>
@@ -74,7 +79,7 @@
                     <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Oliver" class="trainer-pic"></div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/4.gif" class="pkmn-buddy">
                 </div>
-                <div class="char-info"><h3>Wes (6)</h3><p>The Firebrand.</p></div>
+                <div class="char-info"><h3>Wes (6)</h3><p>Technological Firebrand.</p></div>
             </div>
             <div class="char-card simeon">
                 <div class="avatar-box anim-float">
@@ -88,14 +93,14 @@
                     <div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=Baby" class="trainer-pic"></div>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/7.gif" class="pkmn-buddy">
                 </div>
-                <div class="char-info"><h3>Ezra (4m)</h3><p>Rookie Star.</p></div>
+                <div class="char-info"><h3>Ezra (4m)</h3><p>Rising Rookie.</p></div>
             </div>
         </div>
     </section>
 
     <section id="pokedex" class="page-section">
         <div class="controls">
-            <input type="text" id="pkmn-search" placeholder="Search...">
+            <input type="text" id="pkmn-search" placeholder="Search name or ID...">
             <button onclick="handleSearch()" class="search-btn">Find</button>
         </div>
         <div class="gen-tabs">
@@ -120,7 +125,6 @@
             <h2 id="detail-name"></h2>
             <img id="detail-image" src="" style="height:150px">
             <div id="detail-info">
-                <p id="detail-type-display"></p>
                 <div id="evolution-chain"></div>
             </div>
         </div>

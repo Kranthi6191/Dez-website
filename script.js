@@ -2,21 +2,45 @@ const firebaseConfig = { apiKey: "AIzaSyAg5xZeGOUIaaOSJ7_Okn-Y5nEjdUsjwWU", auth
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-let currentScore = 0; let pokemonNameList = []; isShiny = false; let currentMode = 'guess';
+let currentScore = 0; let pokemonNameList = []; currentMode = 'guess';
 const typesPool = ['fire','water','grass','electric','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy','normal'];
 
+// Page Navigation
 function switchPage(id) {
     document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.nav-link').forEach(l => {
-        l.classList.remove('active'); if(l.getAttribute('data-target') === id) l.classList.add('active');
+        l.classList.remove('active');
+        if(l.getAttribute('data-target') === id) l.classList.add('active');
     });
-    document.getElementById(id).classList.add('active');
+    const target = document.getElementById(id);
+    if(target) target.classList.add('active');
 }
 
+// SEARCH BAR FIX
+async function handleSearch() {
+    const query = document.getElementById('pkmn-search').value.trim().toLowerCase();
+    if (!query) return;
+    document.getElementById('summon-overlay').classList.remove('hidden');
+    try {
+        const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${query}`);
+        if (!res.ok) throw new Error();
+        const pkmn = await res.json();
+        setTimeout(() => {
+            document.getElementById('summon-overlay').classList.add('hidden');
+            openModal(pkmn);
+        }, 800);
+    } catch {
+        document.getElementById('summon-overlay').classList.add('hidden');
+        alert("Pokémon not found! Try a number or exact name.");
+    }
+}
+
+// Game Logic
 async function initGame() {
     if (pokemonNameList.length === 0) {
         const res = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=1025`);
-        const data = await res.json(); pokemonNameList = data.results.map(p => p.name.toUpperCase());
+        const data = await res.json();
+        pokemonNameList = data.results.map(p => p.name.toUpperCase());
     }
     const options = document.getElementById('game-options');
     const img = document.getElementById('game-image');
@@ -30,14 +54,20 @@ async function initGame() {
     let pool = currentMode === 'guess' ? pokemonNameList : typesPool;
     let choices = [correct];
     while(choices.length < 4) {
-        let rand = pool[Math.floor(Math.random() * pool.length)]; if(!choices.includes(rand)) choices.push(rand);
+        let rand = pool[Math.floor(Math.random() * pool.length)];
+        if(!choices.includes(rand)) choices.push(rand);
     }
     choices.sort(() => Math.random() - 0.5).forEach(choice => {
-        const btn = document.createElement('button'); btn.textContent = choice.toUpperCase();
+        const btn = document.createElement('button');
+        btn.textContent = choice.toUpperCase();
         btn.onclick = () => {
             img.classList.add('revealed');
-            if(choice === correct) { currentScore++; document.getElementById('game-feedback').textContent = "CORRECT!"; }
-            else { handleGameOver(currentScore, pkmn.name.toUpperCase()); currentScore = 0; document.getElementById('game-feedback').textContent = `IT WAS ${pkmn.name.toUpperCase()}!`; }
+            if(choice === correct) {
+                currentScore++; document.getElementById('game-feedback').textContent = "CORRECT!";
+            } else {
+                handleGameOver(currentScore, pkmn.name.toUpperCase());
+                currentScore = 0; document.getElementById('game-feedback').textContent = `IT WAS ${pkmn.name.toUpperCase()}!`;
+            }
             document.getElementById('current-score').textContent = currentScore;
             setTimeout(initGame, 2000);
         };
@@ -47,8 +77,11 @@ async function initGame() {
 
 function handleGameOver(s, name) {
     if (s > 0) {
-        const tName = prompt("NEW RECORD! Enter your Trainer Name:");
-        if (tName) { db.ref('leaderboard').push({ name: tName, score: s }); db.ref('combatLog').push({ trainer: tName, pokemon: name, streak: s, time: Date.now() }); }
+        const tName = prompt("CHAMPION STREAK! Enter a Trainer Nickname for the Hall of Fame:");
+        if (tName) {
+            db.ref('leaderboard').push({ name: tName, score: s });
+            db.ref('combatLog').push({ trainer: tName, pokemon: name, streak: s, time: Date.now() });
+        }
     }
 }
 
@@ -124,4 +157,6 @@ function loadLB() {
 
 function closeM() { document.getElementById('detail-modal').style.display = 'none'; }
 function toggleTheme() { document.body.classList.toggle('night-mode'); }
+
+// Run
 changeGen(1, 151, document.querySelector('.gen-tab')); initGame(); loadLB(); loadLog();

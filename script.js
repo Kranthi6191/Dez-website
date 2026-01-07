@@ -1,92 +1,127 @@
-const firebaseConfig = {
-  apiKey: "AIzaSyAg5xZeGOUIaaOSJ7_Okn-Y5nEjdUsjwWU",
-  authDomain: "wright-trainers.firebaseapp.com",
-  databaseURL: "https://wright-trainers-default-rtdb.firebaseio.com/",
-  projectId: "wright-trainers",
-  appId: "1:935622740076:web:c2c0bcb281527e9e64b049"
-};
-
+const firebaseConfig = { apiKey: "AIzaSyAg5xZeGOUIaaOSJ7_Okn-Y5nEjdUsjwWU", authDomain: "wright-trainers.firebaseapp.com", databaseURL: "https://wright-trainers-default-rtdb.firebaseio.com/", projectId: "wright-trainers", appId: "1:935622740076:web:c2c0bcb281527e9e64b049" };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-let currentScore = 0;
-let pokemonNameList = [];
-let isShiny = false;
-let currentMode = 'guess';
+let currentScore = 0; let pokemonNameList = []; isShiny = false; let currentMode = 'guess';
+const typesPool = ['fire','water','grass','electric','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy','normal'];
 
 function switchPage(id) {
-  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  document.querySelector(`[data-target="${id}"]`)?.classList.add('active');
+    document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-link').forEach(l => {
+        l.classList.remove('active'); if(l.getAttribute('data-target') === id) l.classList.add('active');
+    });
+    document.getElementById(id).classList.add('active');
 }
 
-async function handleSearch() {
-  const q = document.getElementById('pkmn-search').value.trim().toLowerCase();
-  if (!q) return;
-  document.getElementById('summon-overlay').classList.remove('hidden');
-  try {
-    const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${q}`);
-    if (!res.ok) throw new Error();
-    const pkmn = await res.json();
-    setTimeout(() => {
-      document.getElementById('summon-overlay').classList.add('hidden');
-      openModal(pkmn);
-    }, 700);
-  } catch {
-    document.getElementById('summon-overlay').classList.add('hidden');
-    alert('Pokémon not found');
-  }
+async function initGame() {
+    if (pokemonNameList.length === 0) {
+        const res = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=1025`);
+        const data = await res.json(); pokemonNameList = data.results.map(p => p.name.toUpperCase());
+    }
+    const options = document.getElementById('game-options');
+    const img = document.getElementById('game-image');
+    img.classList.remove('revealed');
+    const randomId = Math.floor(Math.random() * 1025) + 1;
+    const pkmn = await fetch(`https://pokeapi.co/api/v2/pokemon/${randomId}`).then(r => r.json());
+    img.src = pkmn.sprites.other['official-artwork'].front_default;
+    if (currentMode === 'type') img.classList.add('revealed');
+    options.innerHTML = '';
+    let correct = currentMode === 'guess' ? pkmn.name.toUpperCase() : pkmn.types[0].type.name;
+    let pool = currentMode === 'guess' ? pokemonNameList : typesPool;
+    let choices = [correct];
+    while(choices.length < 4) {
+        let rand = pool[Math.floor(Math.random() * pool.length)]; if(!choices.includes(rand)) choices.push(rand);
+    }
+    choices.sort(() => Math.random() - 0.5).forEach(choice => {
+        const btn = document.createElement('button'); btn.textContent = choice.toUpperCase();
+        btn.onclick = () => {
+            img.classList.add('revealed');
+            if(choice === correct) { currentScore++; document.getElementById('game-feedback').textContent = "CORRECT!"; }
+            else { handleGameOver(currentScore, pkmn.name.toUpperCase()); currentScore = 0; document.getElementById('game-feedback').textContent = `IT WAS ${pkmn.name.toUpperCase()}!`; }
+            document.getElementById('current-score').textContent = currentScore;
+            setTimeout(initGame, 2000);
+        };
+        options.appendChild(btn);
+    });
+}
+
+function handleGameOver(s, name) {
+    if (s > 0) {
+        const tName = prompt("NEW RECORD! Enter your Trainer Name:");
+        if (tName) { db.ref('leaderboard').push({ name: tName, score: s }); db.ref('combatLog').push({ trainer: tName, pokemon: name, streak: s, time: Date.now() }); }
+    }
 }
 
 function summonPokemon(p) {
-  document.getElementById('summon-overlay').classList.remove('hidden');
-  setTimeout(() => {
-    document.getElementById('summon-overlay').classList.add('hidden');
-    openModal(p);
-  }, 700);
+    document.getElementById('summon-overlay').classList.remove('hidden');
+    setTimeout(() => { document.getElementById('summon-overlay').classList.add('hidden'); openModal(p); }, 800);
 }
 
-function openModal(p) {
-  document.getElementById('detail-name').textContent = p.name.toUpperCase();
-  document.getElementById('detail-image').src =
-    p.sprites.other['official-artwork'].front_default || p.sprites.front_default;
-  document.getElementById('detail-id').textContent = p.id;
-  document.getElementById('detail-type').textContent =
-    p.types.map(t => t.type.name).join(', ').toUpperCase();
-  document.getElementById('stat-hp').textContent = p.stats[0].base_stat;
-  document.getElementById('stat-attack').textContent = p.stats[1].base_stat;
-  document.getElementById('stat-defense').textContent = p.stats[2].base_stat;
-  document.getElementById('detail-modal').style.display = 'flex';
+async function openModal(p) {
+    document.getElementById('detail-name').textContent = p.name.toUpperCase();
+    document.getElementById('detail-image').src = p.sprites.other['official-artwork'].front_default;
+    document.getElementById('detail-id').textContent = p.id;
+    document.getElementById('detail-type').textContent = p.types.map(t => t.type.name).join(', ').toUpperCase();
+    document.getElementById('stat-hp').textContent = p.stats[0].base_stat;
+    document.getElementById('stat-attack').textContent = p.stats[1].base_stat;
+    document.getElementById('stat-defense').textContent = p.stats[2].base_stat;
+    document.getElementById('detail-modal').style.display = 'flex';
+    getEvolutionChain(p);
 }
 
-function closeM() {
-  document.getElementById('detail-modal').style.display = 'none';
+async function getEvolutionChain(p) {
+    const evoContainer = document.getElementById('evolution-chain');
+    evoContainer.innerHTML = 'Searching family...';
+    try {
+        const speciesRes = await fetch(p.species.url);
+        const speciesData = await speciesRes.json();
+        const evoRes = await fetch(speciesData.evolution_chain.url);
+        const evoData = await evoRes.json();
+        evoContainer.innerHTML = '';
+        let curr = evoData.chain;
+        while (curr) {
+            const pkmnId = curr.species.url.split('/').slice(-2, -1)[0];
+            const img = document.createElement('img');
+            img.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pkmnId}.png`;
+            img.onclick = async () => { const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pkmnId}`); summonPokemon(await res.json()); };
+            evoContainer.appendChild(img); curr = curr.evolves_to[0]; if (curr) evoContainer.innerHTML += ' → ';
+        }
+    } catch { evoContainer.innerHTML = 'None'; }
 }
 
-function toggleTheme() {
-  document.body.classList.toggle('night-mode');
-  document.getElementById('theme-toggle').textContent =
-    document.body.classList.contains('night-mode') ? '☀️ Day Mode' : '🌙 Night Mode';
+async function changeGen(s, e, btn) {
+    document.querySelectorAll('.gen-tab').forEach(b => b.classList.remove('active')); btn.classList.add('active');
+    const grid = document.getElementById('pokemon-grid'); grid.innerHTML = 'Searching...';
+    const promises = []; for (let i = s; i <= e; i++) promises.push(fetch(`https://pokeapi.co/api/v2/pokemon/${i}`).then(res => res.json()));
+    const list = await Promise.all(promises); grid.innerHTML = '';
+    list.forEach(p => {
+        const card = document.createElement('div'); card.className = 'pokemon-card';
+        card.innerHTML = `<img src="${p.sprites.front_default}"><h3>${p.name.toUpperCase()}</h3>`;
+        card.onclick = () => { summonPokemon(p); }; grid.appendChild(card);
+    });
 }
 
-async function changeGen(start, end, btn) {
-  document.querySelectorAll('.gen-tab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const grid = document.getElementById('pokemon-grid');
-  grid.innerHTML = '<p>Searching tall grass...</p>';
-  const cards = [];
-  for (let i = start; i <= end; i++) {
-    const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${i}`);
-    const p = await res.json();
-    cards.push(`
-      <div class="pokemon-card" onclick="summonPokemon(${JSON.stringify(p).replace(/"/g,'&quot;')})">
-        <img src="${p.sprites.front_default}">
-        <h3>${p.name.toUpperCase()}</h3>
-      </div>
-    `);
-  }
-  grid.innerHTML = cards.join('');
+function switchGame(mode, btn) {
+    currentMode = mode; currentScore = 0; document.getElementById('current-score').textContent = "0";
+    document.querySelectorAll('.game-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active');
+    initGame();
 }
 
-changeGen(1,151,document.querySelector('.gen-tab'));
+function loadLog() {
+    db.ref('combatLog').limitToLast(6).on('value', snap => {
+        const log = document.getElementById('combat-log'); log.innerHTML = '';
+        snap.forEach(c => { const e = c.val(); log.innerHTML = `<li>⚔️ <b>${e.trainer || "Trainer"}</b> streak: ${e.streak} at ${e.pokemon}</li>` + log.innerHTML; });
+    });
+}
+
+function loadLB() {
+    db.ref('leaderboard').on('value', snap => {
+        const lb = document.getElementById('leaderboard-body'); let scores = [];
+        snap.forEach(c => scores.push(c.val())); scores.sort((a,b) => b.score - a.score); lb.innerHTML = '';
+        scores.slice(0, 5).forEach((e, i) => { lb.innerHTML += `<tr><td>#${i+1}</td><td>${e.name.toUpperCase()}</td><td>${e.score}</td></tr>`; });
+    });
+}
+
+function closeM() { document.getElementById('detail-modal').style.display = 'none'; }
+function toggleTheme() { document.body.classList.toggle('night-mode'); }
+changeGen(1, 151, document.querySelector('.gen-tab')); initGame(); loadLB(); loadLog();

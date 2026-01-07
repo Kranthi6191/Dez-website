@@ -13,25 +13,16 @@ let pokemonNameList = [];
 let isShiny = false;
 let currentMode = 'guess';
 
-// FULL 18-TYPE WEAKNESS CHART
+// FULL WEAKNESS CHART
 const typeWeaknesses = {
-    normal: ['fighting'], 
-    fire: ['water', 'ground', 'rock'], 
-    water: ['electric', 'grass'], 
-    grass: ['fire', 'ice', 'poison', 'flying', 'bug'], 
-    electric: ['ground'], 
-    ice: ['fire', 'fighting', 'rock', 'steel'], 
-    fighting: ['flying', 'psychic', 'fairy'], 
-    poison: ['ground', 'psychic'], 
-    ground: ['water', 'grass', 'ice'], 
-    flying: ['electric', 'ice', 'rock'], 
-    psychic: ['bug', 'ghost', 'dark'], 
-    bug: ['fire', 'flying', 'rock'], 
-    rock: ['water', 'grass', 'fighting', 'ground', 'steel'], 
-    ghost: ['ghost', 'dark'], 
-    dragon: ['ice', 'dragon', 'fairy'], 
-    dark: ['fighting', 'bug', 'fairy'], 
-    steel: ['fire', 'fighting', 'ground'], 
+    normal: ['fighting'], fire: ['water', 'ground', 'rock'], water: ['electric', 'grass'], 
+    grass: ['fire', 'ice', 'poison', 'flying', 'bug'], electric: ['ground'], 
+    ice: ['fire', 'fighting', 'rock', 'steel'], fighting: ['flying', 'psychic', 'fairy'], 
+    poison: ['ground', 'psychic'], ground: ['water', 'grass', 'ice'], 
+    flying: ['electric', 'ice', 'rock'], psychic: ['bug', 'ghost', 'dark'], 
+    bug: ['fire', 'flying', 'rock'], rock: ['water', 'grass', 'fighting', 'ground', 'steel'], 
+    ghost: ['ghost', 'dark'], dragon: ['ice', 'dragon', 'fairy'], 
+    dark: ['fighting', 'bug', 'fairy'], steel: ['fire', 'fighting', 'ground'], 
     fairy: ['poison', 'steel']
 };
 
@@ -45,23 +36,56 @@ function switchPage(id) {
     if(target) target.classList.add('active');
 }
 
-// SETUP EVENT LISTENERS (Including Enter Key)
+// SETUP & LISTENERS
 document.addEventListener('DOMContentLoaded', () => {
     changeGen(1, 151, document.querySelector('.gen-tab'));
     initGame();
-    loadLB();
+    loadLB(); // Load Leaderboard immediately
     loadLog();
     
-    // Search Bar "Enter" Key Support
+    // Enter key support for search
     const searchInput = document.getElementById('pkmn-search');
     if (searchInput) {
         searchInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                handleSearch();
-            }
+            if (e.key === 'Enter') handleSearch();
         });
     }
 });
+
+// ROBUST LEADERBOARD LOADER
+function loadLB() {
+    const lb = document.getElementById('leaderboard-body');
+    
+    db.ref('leaderboard').on('value', snap => {
+        lb.innerHTML = ''; // Clear existing rows
+        
+        if (!snap.exists()) {
+            lb.innerHTML = '<tr><td colspan="3">No Champions Yet</td></tr>';
+            return;
+        }
+
+        let scores = [];
+        snap.forEach(c => {
+            const val = c.val();
+            // SAFETY CHECK: Only accepts valid scores to prevent "stuck" board
+            if (val && val.name && typeof val.score === 'number') {
+                scores.push(val);
+            }
+        });
+
+        // Sort Highest to Lowest
+        scores.sort((a,b) => b.score - a.score);
+        
+        // Display Top 5
+        if (scores.length === 0) {
+            lb.innerHTML = '<tr><td colspan="3">Waiting for Data...</td></tr>';
+        } else {
+            scores.slice(0, 5).forEach((e, i) => {
+                lb.innerHTML += `<tr><td>#${i+1}</td><td>${e.name.toUpperCase()}</td><td>${e.score}</td></tr>`;
+            });
+        }
+    });
+}
 
 async function handleSearch() {
     const query = document.getElementById('pkmn-search').value.trim().toLowerCase();
@@ -146,7 +170,6 @@ function summonPokemon(p) {
     setTimeout(() => { document.getElementById('summon-overlay').classList.add('hidden'); openModal(p); }, 800);
 }
 
-// MODAL WITH WEAKNESSES
 async function openModal(p) {
     document.getElementById('detail-name').textContent = p.name.toUpperCase();
     document.getElementById('detail-image').src = p.sprites.other['official-artwork'].front_default;
@@ -155,7 +178,6 @@ async function openModal(p) {
     const types = p.types.map(t => t.type.name.toLowerCase());
     document.getElementById('detail-type').textContent = types.join(', ').toUpperCase();
     
-    // Calculate Weaknesses
     let weaknesses = new Set();
     types.forEach(t => { 
         if (typeWeaknesses[t]) {
@@ -223,22 +245,6 @@ function loadLog() {
     db.ref('combatLog').limitToLast(6).on('value', snap => {
         const log = document.getElementById('combat-log'); log.innerHTML = '';
         snap.forEach(c => { const e = c.val(); log.innerHTML = `<li>⚔️ <b>${e.trainer || "Trainer"}</b> streak: ${e.streak} at ${e.pokemon}</li>` + log.innerHTML; });
-    });
-}
-
-function loadLB() {
-    db.ref('leaderboard').on('value', snap => {
-        const lb = document.getElementById('leaderboard-body');
-        let scores = [];
-        if(snap.exists()) {
-            snap.forEach(c => scores.push(c.val()));
-        }
-        scores.sort((a,b) => b.score - a.score);
-        lb.innerHTML = '';
-        if(scores.length === 0) lb.innerHTML = '<tr><td colspan="3">Be the first!</td></tr>';
-        scores.slice(0, 5).forEach((e, i) => { 
-            lb.innerHTML += `<tr><td>#${i+1}</td><td>${e.name.toUpperCase()}</td><td>${e.score}</td></tr>`; 
-        });
     });
 }
 

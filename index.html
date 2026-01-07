@@ -60,7 +60,7 @@
 
     <section id="pokedex" class="page-section">
         <div class="controls">
-            <input type="text" id="pkmn-search" placeholder="Search by name or #...">
+            <input type="text" id="pkmn-search" placeholder="Enter name or number...">
             <button class="search-btn" onclick="handleSearch()">Find</button>
         </div>
         <div class="gen-tabs">
@@ -85,6 +85,7 @@
             <h2 id="detail-name"></h2>
             <img id="detail-image">
             <p>#<span id="detail-id"></span> | <span id="detail-type"></span></p>
+            <p class="weakness-tag">Weak to: <span id="detail-weakness"></span></p>
             <div class="stat-grid">
                 <div>HP: <span id="stat-hp"></span></div>
                 <div>ATK: <span id="stat-attack"></span></div>

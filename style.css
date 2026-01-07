@@ -1,30 +1,65 @@
 :root { --accent: #3498db; --bg: #f5f8fd; --card: #ffffff; --text: #2c3e50; --gold: #f1c40f; }
 body.night-mode { --bg: #1a1a2e; --card: #16213e; --text: #f8f9fa; --accent: #e94560; }
-body { font-family: 'Lexend', sans-serif; background: var(--bg); color: var(--text); margin: 0; transition: 0.5s; overflow-x: hidden; }
-header { background: #2c3e50; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; color: white; position: sticky; top: 0; z-index: 1000; }
+
+body { 
+    font-family: 'Lexend', sans-serif; 
+    background: var(--bg); 
+    color: var(--text); 
+    margin: 0; 
+    transition: 0.5s; 
+    overflow-x: hidden; 
+}
+
+/* HEADER */
+header { 
+    background: #2c3e50; 
+    padding: 15px 5%; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    color: white; 
+    position: sticky; 
+    top: 0; 
+    z-index: 1000; 
+}
 .logo a { color: white; text-decoration: none; font-weight: bold; font-size: 1.2rem; }
 nav ul { list-style: none; display: flex; gap: 10px; padding: 0; }
 nav a { color: #bdc3c7; text-decoration: none; font-weight: bold; font-size: 0.9rem; }
 nav a.active { color: white; border-bottom: 3px solid var(--accent); }
+
+/* SECTIONS */
 .page-section { display: none; padding: 30px 5%; text-align: center; }
 .page-section.active { display: block; animation: slideIn 0.3s ease-out; }
 
-/* Squad Cards */
+/* SQUAD CARDS (Compact) */
 .character-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
-.char-card { background: var(--card); width: 160px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-bottom: 4px solid #ddd; padding-bottom: 10px; overflow: hidden; }
+.char-card { 
+    background: var(--card); 
+    width: 160px; 
+    border-radius: 20px; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+    border-bottom: 4px solid #ddd; 
+    padding-bottom: 10px; 
+    overflow: hidden; 
+}
 .avatar-box { height: 100px; position: relative; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.02); }
 .trainer-ring { width: 60px; height: 60px; border-radius: 50%; border: 2px solid #fff; overflow: hidden; background: white; }
 .trainer-pic { width: 100%; height: 100%; object-fit: cover; }
 .pkmn-buddy { height: 45px; position: absolute; bottom: 5px; right: 5px; }
-.char-info h3 { font-size: 0.9rem; margin: 5px 0; } .char-info p { font-size: 0.7rem; }
+.char-info h3 { font-size: 0.9rem; margin: 5px 0; } 
+.char-info p { font-size: 0.7rem; margin: 0; }
 
-/* Game Graphics - FIXED BUTTONS */
+/* GAME AREA */
 #game-image { height: 160px; filter: brightness(0); transition: 0.4s; margin: 0 auto; display: block; }
 #game-image.revealed { filter: brightness(1); }
-.game-btn { padding: 8px 15px; border-radius: 20px; border: none; background: #bdc3c7; font-weight: bold; cursor: pointer; }
+#game-image.shiny { filter: drop-shadow(0 0 20px #f1c40f) brightness(0); }
+#game-image.shiny.revealed { filter: drop-shadow(0 0 20px #f1c40f) brightness(1); }
+
+.game-selector { margin-bottom: 20px; }
+.game-btn { padding: 8px 15px; border-radius: 20px; border: none; background: #bdc3c7; font-weight: bold; cursor: pointer; margin: 0 5px; }
 .game-btn.active { background: var(--accent); color: white; }
 
-/* The "Fancy" Buttons look pro again */
+.fancy-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
 .fancy-options button { 
     padding: 14px; 
     border-radius: 12px; 
@@ -33,34 +68,48 @@ nav a.active { color: white; border-bottom: 3px solid var(--accent); }
     color: white; 
     font-weight: bold; 
     cursor: pointer; 
-    margin-top: 5px; 
     width: 100%; 
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
+/* POKEDEX GRID */
 #pokemon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; margin-top: 20px; }
-.pokemon-card { background: var(--card); padding: 10px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; }
+.pokemon-card { background: var(--card); padding: 10px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; transition: 0.2s; }
+.pokemon-card:hover { transform: translateY(-5px); }
 .pokemon-card img { width: 100%; height: 80px; object-fit: contain; }
 
-/* FIXED: Modal Scrolling & Sizing */
-.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: none; align-items: center; justify-content: center; z-index: 10000; }
+/* MODAL FIX (The "Box" Sizing) */
+.modal { 
+    position: fixed; 
+    inset: 0; 
+    background: rgba(0,0,0,0.85); 
+    display: none; 
+    align-items: center; 
+    justify-content: center; 
+    z-index: 10000; 
+}
 .modal-card { 
     background: white; 
-    padding: 25px; 
-    border-radius: 30px; 
+    padding: 20px; 
+    border-radius: 25px; 
     width: 85%; 
-    max-width: 380px; 
+    max-width: 360px; /* Keeps it slim */
     text-align: center; 
-    max-height: 85vh; /* Prevents it from being too tall */
+    max-height: 85vh; /* Fits on screen */
     overflow-y: auto; /* Adds scroll bar if needed */
+    position: relative;
 }
+#detail-image { height: 140px; object-fit: contain; margin-bottom: 10px; }
+#detail-name { margin: 5px 0; font-size: 1.5rem; text-transform: uppercase; }
+.weakness-tag { color: #e74c3c; font-weight: bold; font-size: 0.85rem; margin: 8px 0; display: block; }
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; background: #f8f9fa; border-radius: 12px; padding: 10px; font-weight: bold; font-size: 0.8rem; }
+#evolution-chain { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+#evolution-chain img { width: 45px; cursor: pointer; transition: 0.2s; }
+#evolution-chain img:hover { transform: scale(1.1); }
 
-.weakness-tag { color: #e74c3c; font-weight: bold; font-size: 0.9rem; margin: 10px 0; }
-.stat-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; background: #f8f9fa; border-radius: 12px; font-weight: bold; padding: 10px; font-size: 0.8rem; }
-#evolution-chain img { width: 40px; margin: 0 5px; cursor: pointer; }
-
+/* ANIMATION */
 #summon-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; align-items: center; justify-content: center; color: white; }
-.poke-ball-loader { width: 70px; height: 70px; border: 4px solid #000; border-radius: 50%; background: linear-gradient(to bottom, #ff5252 50%, #fff 50%); animation: roll 0.6s infinite linear; }
+.poke-ball-loader { width: 70px; height: 70px; border: 4px solid #000; border-radius: 50%; background: linear-gradient(to bottom, #ff5252 50%, #fff 50%); animation: roll 0.6s infinite linear; margin-bottom: 15px; }
 .hidden { display: none !important; }
 @keyframes roll { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }

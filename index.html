@@ -57,11 +57,11 @@
     <section id="about" class="page-section">
         <h1 class="section-title">The Wright Elite Squad</h1>
         <div class="character-grid">
-            <div class="char-card dez"><div class="avatar-box"><div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Felix&skinColor=f9c9b6" class="trainer-pic"></div><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif" class="pkmn-buddy"></div><div class="char-info"><h3>Trainer Dez</h3><p>Master Strategist.</p></div></div>
-            <div class="char-card izzy"><div class="avatar-box"><div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Molly&skinColor=f9c9b6" class="trainer-pic"></div><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/133.gif" class="pkmn-buddy"></div><div class="char-info"><h3>Trainer Izzy</h3><p>Versatile Voyager.</p></div></div>
+            <div class="char-card dez"><div class="avatar-box"><div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Felix&skinColor=f9c9b6" class="trainer-pic"></div><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif" class="pkmn-buddy"></div><div class="char-info"><h3>Trainer Dez</h3><p>Master Strategist and the smartest of all.</p></div></div>
+            <div class="char-card izzy"><div class="avatar-box"><div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Molly&skinColor=f9c9b6" class="trainer-pic"></div><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/133.gif" class="pkmn-buddy"></div><div class="char-info"><h3>Trainer Izzy</h3><p>Versatile Voyager and Gooder than everyone.</p></div></div>
             <div class="char-card wes"><div class="avatar-box"><div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Oliver&skinColor=f9c9b6" class="trainer-pic"></div><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/4.gif" class="pkmn-buddy"></div><div class="char-info"><h3>Trainer Wes</h3><p>Technological Firebrand.</p></div></div>
             <div class="char-card simeon"><div class="avatar-box"><div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=Simeon&skinColor=f9c9b6" class="trainer-pic"></div><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/1.gif" class="pkmn-buddy"></div><div class="char-info"><h3>Trainer Simeon</h3><p>The Zen Master.</p></div></div>
-            <div class="char-card ezra"><div class="avatar-box"><div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=Baby&skinColor=f9c9b6" class="trainer-pic"></div><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/7.gif" class="pkmn-buddy"></div><div class="char-info"><h3>Rookie Ezra</h3><p>Rising Star.</p></div></div>
+            <div class="char-card ezra"><div class="avatar-box"><div class="trainer-ring"><img src="https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=Baby&skinColor=f9c9b6" class="trainer-pic"></div><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/7.gif" class="pkmn-buddy"></div><div class="char-info"><h3>Rookie Ezra</h3><p>The Rising Star with potential.</p></div></div>
         </div>
     </section>
 
@@ -81,7 +81,12 @@
         <main id="pokemon-grid"></main>
     </section>
 
-    <div id="summon-overlay" class="hidden"><div class="loader-wrap"><div class="poke-ball-loader"></div><p>Summoning Details...</p></div></div>
+    <div id="summon-overlay" class="hidden">
+        <div class="loader-wrap">
+            <div class="poke-ball-loader"></div>
+            <p>Summoning Details...</p>
+        </div>
+    </div>
 
     <div id="detail-modal" class="modal">
         <div class="modal-card">
@@ -89,7 +94,6 @@
             <h2 id="detail-name"></h2>
             <img id="detail-image">
             <p>#<span id="detail-id"></span> | <span id="detail-type"></span></p>
-            <p class="weakness-tag">Weaknesses: <span id="detail-weakness"></span></p>
             <div class="stat-grid">
                 <div>HP: <span id="stat-hp"></span></div>
                 <div>ATK: <span id="stat-attack"></span></div>

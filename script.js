@@ -2,10 +2,30 @@ const firebaseConfig = { apiKey: "AIzaSyAg5xZeGOUIaaOSJ7_Okn-Y5nEjdUsjwWU", auth
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-let currentScore = 0; let pokemonNameList = []; currentMode = 'guess';
-const typesPool = ['fire','water','grass','electric','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy','normal'];
+let currentScore = 0; let pokemonNameList = []; let currentMode = 'guess';
 
-// Page Navigation
+// FIXED: Full Weakness Chart
+const typeWeaknesses = {
+    normal: ['fighting'], 
+    fire: ['water', 'ground', 'rock'], 
+    water: ['electric', 'grass'], 
+    grass: ['fire', 'ice', 'poison', 'flying', 'bug'], 
+    electric: ['ground'], 
+    ice: ['fire', 'fighting', 'rock', 'steel'], 
+    fighting: ['flying', 'psychic', 'fairy'], 
+    poison: ['ground', 'psychic'], 
+    ground: ['water', 'grass', 'ice'], 
+    flying: ['electric', 'ice', 'rock'], 
+    psychic: ['bug', 'ghost', 'dark'], 
+    bug: ['fire', 'flying', 'rock'], 
+    rock: ['water', 'grass', 'fighting', 'ground', 'steel'], 
+    ghost: ['ghost', 'dark'], 
+    dragon: ['ice', 'dragon', 'fairy'], 
+    dark: ['fighting', 'bug', 'fairy'], 
+    steel: ['fire', 'fighting', 'ground'], 
+    fairy: ['poison', 'steel']
+};
+
 function switchPage(id) {
     document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.nav-link').forEach(l => {
@@ -16,7 +36,22 @@ function switchPage(id) {
     if(target) target.classList.add('active');
 }
 
-// SEARCH BAR FIX
+// FIXED: Enter Key Listener
+document.addEventListener('DOMContentLoaded', () => {
+    changeGen(1, 151, document.querySelector('.gen-tab'));
+    initGame();
+    
+    // Allow hitting ENTER in search bar
+    const searchInput = document.getElementById('pkmn-search');
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                handleSearch();
+            }
+        });
+    }
+});
+
 async function handleSearch() {
     const query = document.getElementById('pkmn-search').value.trim().toLowerCase();
     if (!query) return;
@@ -35,7 +70,6 @@ async function handleSearch() {
     }
 }
 
-// Game Logic
 async function initGame() {
     if (pokemonNameList.length === 0) {
         const res = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=1025`);
@@ -45,13 +79,17 @@ async function initGame() {
     const options = document.getElementById('game-options');
     const img = document.getElementById('game-image');
     img.classList.remove('revealed');
+    
     const randomId = Math.floor(Math.random() * 1025) + 1;
     const pkmn = await fetch(`https://pokeapi.co/api/v2/pokemon/${randomId}`).then(r => r.json());
     img.src = pkmn.sprites.other['official-artwork'].front_default;
     if (currentMode === 'type') img.classList.add('revealed');
+    
     options.innerHTML = '';
     let correct = currentMode === 'guess' ? pkmn.name.toUpperCase() : pkmn.types[0].type.name;
+    const typesPool = ['fire','water','grass','electric','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy','normal'];
     let pool = currentMode === 'guess' ? pokemonNameList : typesPool;
+    
     let choices = [correct];
     while(choices.length < 4) {
         let rand = pool[Math.floor(Math.random() * pool.length)];
@@ -90,11 +128,24 @@ function summonPokemon(p) {
     setTimeout(() => { document.getElementById('summon-overlay').classList.add('hidden'); openModal(p); }, 800);
 }
 
+// FIXED: Weakness Calculation
 async function openModal(p) {
     document.getElementById('detail-name').textContent = p.name.toUpperCase();
     document.getElementById('detail-image').src = p.sprites.other['official-artwork'].front_default;
     document.getElementById('detail-id').textContent = p.id;
-    document.getElementById('detail-type').textContent = p.types.map(t => t.type.name).join(', ').toUpperCase();
+    
+    const types = p.types.map(t => t.type.name.toLowerCase());
+    document.getElementById('detail-type').textContent = types.join(', ').toUpperCase();
+    
+    // Calculate Weaknesses
+    let weaknesses = new Set();
+    types.forEach(t => { 
+        if (typeWeaknesses[t]) {
+            typeWeaknesses[t].forEach(w => weaknesses.add(w)); 
+        }
+    });
+    document.getElementById('detail-weakness').textContent = Array.from(weaknesses).join(', ').toUpperCase() || "NONE";
+    
     document.getElementById('stat-hp').textContent = p.stats[0].base_stat;
     document.getElementById('stat-attack').textContent = p.stats[1].base_stat;
     document.getElementById('stat-defense').textContent = p.stats[2].base_stat;
@@ -104,7 +155,7 @@ async function openModal(p) {
 
 async function getEvolutionChain(p) {
     const evoContainer = document.getElementById('evolution-chain');
-    evoContainer.innerHTML = 'Searching family...';
+    evoContainer.innerHTML = 'Searching...';
     try {
         const speciesRes = await fetch(p.species.url);
         const speciesData = await speciesRes.json();
@@ -157,6 +208,3 @@ function loadLB() {
 
 function closeM() { document.getElementById('detail-modal').style.display = 'none'; }
 function toggleTheme() { document.body.classList.toggle('night-mode'); }
-
-// Run
-changeGen(1, 151, document.querySelector('.gen-tab')); initGame(); loadLB(); loadLog();

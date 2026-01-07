@@ -3,7 +3,7 @@ name: Deploy Pokémon Site to InfinityFree
 on:
   push:
     branches:
-      - main  # Deploys when you push to main branch
+      - main
 
 jobs:
   deploy:
@@ -13,24 +13,11 @@ jobs:
       - name: Checkout latest code
         uses: actions/checkout@v3
 
-      - name: Validate secrets
-        run: |
-          if [ -z "${{ secrets.FTP_SERVER }}" ]; then
-            echo "ERROR: FTP_SERVER secret is missing!" && exit 1
-          fi
-          if [ -z "${{ secrets.FTP_USERNAME }}" ]; then
-            echo "ERROR: FTP_USERNAME secret is missing!" && exit 1
-          fi
-          if [ -z "${{ secrets.FTP_PASSWORD }}" ]; then
-            echo "ERROR: FTP_PASSWORD secret is missing!" && exit 1
-          fi
-
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./         # root of your repo (change if needed)
-          server-dir: /htdocs/  # InfinityFree default folder
-          dry-run:
+          local-dir: ./
+          server-dir: /htdocs/

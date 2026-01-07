@@ -1,10 +1,19 @@
-const firebaseConfig = { apiKey: "AIzaSyAg5xZeGOUIaaOSJ7_Okn-Y5nEjdUsjwWU", authDomain: "wright-trainers.firebaseapp.com", databaseURL: "https://wright-trainers-default-rtdb.firebaseio.com/", projectId: "wright-trainers", appId: "1:935622740076:web:c2c0bcb281527e9e64b049" };
+const firebaseConfig = {
+  apiKey: "AIzaSyAg5xZeGOUIaaOSJ7_Okn-Y5nEjdUsjwWU",
+  authDomain: "wright-trainers.firebaseapp.com",
+  databaseURL: "https://wright-trainers-default-rtdb.firebaseio.com/",
+  projectId: "wright-trainers",
+  appId: "1:935622740076:web:c2c0bcb281527e9e64b049"
+};
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-let currentScore = 0; let pokemonNameList = []; let currentMode = 'guess';
+let currentScore = 0; 
+let pokemonNameList = []; 
+let isShiny = false;
+let currentMode = 'guess';
 
-// FIXED: Full Weakness Chart
+// FULL 18-TYPE WEAKNESS CHART
 const typeWeaknesses = {
     normal: ['fighting'], 
     fire: ['water', 'ground', 'rock'], 
@@ -36,12 +45,14 @@ function switchPage(id) {
     if(target) target.classList.add('active');
 }
 
-// FIXED: Enter Key Listener
+// SETUP EVENT LISTENERS (Including Enter Key)
 document.addEventListener('DOMContentLoaded', () => {
     changeGen(1, 151, document.querySelector('.gen-tab'));
     initGame();
+    loadLB();
+    loadLog();
     
-    // Allow hitting ENTER in search bar
+    // Search Bar "Enter" Key Support
     const searchInput = document.getElementById('pkmn-search');
     if (searchInput) {
         searchInput.addEventListener('keypress', function (e) {
@@ -79,10 +90,15 @@ async function initGame() {
     const options = document.getElementById('game-options');
     const img = document.getElementById('game-image');
     img.classList.remove('revealed');
+    document.getElementById('shiny-alert').classList.add('hidden');
     
+    // Shiny Logic
+    isShiny = Math.random() < 0.1;
     const randomId = Math.floor(Math.random() * 1025) + 1;
     const pkmn = await fetch(`https://pokeapi.co/api/v2/pokemon/${randomId}`).then(r => r.json());
-    img.src = pkmn.sprites.other['official-artwork'].front_default;
+    
+    img.src = isShiny ? pkmn.sprites.other['official-artwork'].front_shiny : pkmn.sprites.other['official-artwork'].front_default;
+    if (isShiny) { img.classList.add('shiny'); document.getElementById('shiny-alert').classList.remove('hidden'); }
     if (currentMode === 'type') img.classList.add('revealed');
     
     options.innerHTML = '';
@@ -101,10 +117,12 @@ async function initGame() {
         btn.onclick = () => {
             img.classList.add('revealed');
             if(choice === correct) {
-                currentScore++; document.getElementById('game-feedback').textContent = "CORRECT!";
+                currentScore += isShiny ? 5 : 1;
+                document.getElementById('game-feedback').textContent = "CORRECT!";
             } else {
                 handleGameOver(currentScore, pkmn.name.toUpperCase());
-                currentScore = 0; document.getElementById('game-feedback').textContent = `IT WAS ${pkmn.name.toUpperCase()}!`;
+                currentScore = 0; 
+                document.getElementById('game-feedback').textContent = `IT WAS ${pkmn.name.toUpperCase()}!`;
             }
             document.getElementById('current-score').textContent = currentScore;
             setTimeout(initGame, 2000);
@@ -128,7 +146,7 @@ function summonPokemon(p) {
     setTimeout(() => { document.getElementById('summon-overlay').classList.add('hidden'); openModal(p); }, 800);
 }
 
-// FIXED: Weakness Calculation
+// MODAL WITH WEAKNESSES
 async function openModal(p) {
     document.getElementById('detail-name').textContent = p.name.toUpperCase();
     document.getElementById('detail-image').src = p.sprites.other['official-artwork'].front_default;
@@ -167,21 +185,31 @@ async function getEvolutionChain(p) {
             const pkmnId = curr.species.url.split('/').slice(-2, -1)[0];
             const img = document.createElement('img');
             img.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pkmnId}.png`;
-            img.onclick = async () => { const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pkmnId}`); summonPokemon(await res.json()); };
-            evoContainer.appendChild(img); curr = curr.evolves_to[0]; if (curr) evoContainer.innerHTML += ' → ';
+            img.onclick = async () => { 
+                const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pkmnId}`); 
+                summonPokemon(await res.json()); 
+            };
+            evoContainer.appendChild(img);
+            curr = curr.evolves_to[0];
+            if (curr) evoContainer.innerHTML += ' → ';
         }
     } catch { evoContainer.innerHTML = 'None'; }
 }
 
 async function changeGen(s, e, btn) {
-    document.querySelectorAll('.gen-tab').forEach(b => b.classList.remove('active')); btn.classList.add('active');
-    const grid = document.getElementById('pokemon-grid'); grid.innerHTML = 'Searching...';
-    const promises = []; for (let i = s; i <= e; i++) promises.push(fetch(`https://pokeapi.co/api/v2/pokemon/${i}`).then(res => res.json()));
-    const list = await Promise.all(promises); grid.innerHTML = '';
+    document.querySelectorAll('.gen-tab').forEach(b => b.classList.remove('active')); 
+    if(btn) btn.classList.add('active');
+    const grid = document.getElementById('pokemon-grid'); 
+    grid.innerHTML = 'Searching tall grass...';
+    const promises = []; 
+    for (let i = s; i <= e; i++) promises.push(fetch(`https://pokeapi.co/api/v2/pokemon/${i}`).then(res => res.json()));
+    const list = await Promise.all(promises); 
+    grid.innerHTML = '';
     list.forEach(p => {
         const card = document.createElement('div'); card.className = 'pokemon-card';
         card.innerHTML = `<img src="${p.sprites.front_default}"><h3>${p.name.toUpperCase()}</h3>`;
-        card.onclick = () => { summonPokemon(p); }; grid.appendChild(card);
+        card.onclick = () => { summonPokemon(p); }; 
+        grid.appendChild(card);
     });
 }
 
@@ -200,9 +228,17 @@ function loadLog() {
 
 function loadLB() {
     db.ref('leaderboard').on('value', snap => {
-        const lb = document.getElementById('leaderboard-body'); let scores = [];
-        snap.forEach(c => scores.push(c.val())); scores.sort((a,b) => b.score - a.score); lb.innerHTML = '';
-        scores.slice(0, 5).forEach((e, i) => { lb.innerHTML += `<tr><td>#${i+1}</td><td>${e.name.toUpperCase()}</td><td>${e.score}</td></tr>`; });
+        const lb = document.getElementById('leaderboard-body');
+        let scores = [];
+        if(snap.exists()) {
+            snap.forEach(c => scores.push(c.val()));
+        }
+        scores.sort((a,b) => b.score - a.score);
+        lb.innerHTML = '';
+        if(scores.length === 0) lb.innerHTML = '<tr><td colspan="3">Be the first!</td></tr>';
+        scores.slice(0, 5).forEach((e, i) => { 
+            lb.innerHTML += `<tr><td>#${i+1}</td><td>${e.name.toUpperCase()}</td><td>${e.score}</td></tr>`; 
+        });
     });
 }
 

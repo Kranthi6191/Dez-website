@@ -78,6 +78,16 @@ nav a.active { color: white; border-bottom: 3px solid var(--accent); }
 .pokemon-card:hover { transform: translateY(-5px); }
 .pokemon-card img { width: 100%; height: 80px; object-fit: contain; }
 
+/* FIX FOR NAMES OVERFLOWING */
+.pokemon-card h3 {
+    font-size: 0.75rem;
+    text-align: center;
+    margin: 5px 0 0 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 /* MODAL FIX (The "Box" Sizing) */
 .modal { 
     position: fixed; 

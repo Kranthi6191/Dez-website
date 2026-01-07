@@ -11,15 +11,18 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body class="light-mode">
+
     <header>
         <div class="logo"><a href="#" onclick="switchPage('home')">Wright's Pet Pokemons</a></div>
         <div class="header-right">
             <button id="theme-toggle" onclick="toggleTheme()">🌙 Night Mode</button>
-            <nav><ul>
-                <li><a href="#" class="nav-link active" data-target="home">Games</a></li>
-                <li><a href="#" class="nav-link" data-target="about">Squad</a></li>
-                <li><a href="#" class="nav-link" data-target="pokedex">Pokedex</a></li>
-            </ul></nav>
+            <nav>
+                <ul>
+                    <li><a href="#" class="nav-link active" onclick="switchPage('home')" data-target="home">Games</a></li>
+                    <li><a href="#" class="nav-link" onclick="switchPage('about')" data-target="about">Squad</a></li>
+                    <li><a href="#" class="nav-link" onclick="switchPage('pokedex')" data-target="pokedex">Pokedex</a></li>
+                </ul>
+            </nav>
         </div>
     </header>
 
@@ -56,7 +59,10 @@
     </section>
 
     <section id="pokedex" class="page-section">
-        <div class="controls"><input type="text" id="pkmn-search" placeholder="Search..."><button class="search-btn" onclick="handleSearch()">Find</button></div>
+        <div class="controls">
+            <input type="text" id="pkmn-search" placeholder="Search by name or #...">
+            <button class="search-btn" onclick="handleSearch()">Find</button>
+        </div>
         <div class="gen-tabs">
             <button class="gen-tab active" onclick="changeGen(1,151,this)">1</button>
             <button class="gen-tab" onclick="changeGen(152,251,this)">2</button>
